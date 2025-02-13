@@ -17,21 +17,20 @@ pnpm add @sparkstone/solid-validation
 ## Table of Contents
 
 - [Usage](#usage)
-  - [Basic Example](#basic-example)
+  - Basic Example
 - [API](#api)
-  - [`useForm(options?)`](#useformoptions)
-    - [`validate`](#validate)
-    - [`formSubmit`](#formsubmit)
-    - [`errors`](#errors)
-    - [`isSubmitting`](#issubmitting)
-    - [`isSubmitted`](#issubmitted)
-    - [`validateRef`](#validateref)
+  - `useForm(options?)`
+    - `validate`
+    - `formSubmit`
+    - `errors`
+    - `isSubmitting`
+    - `isSubmitted`
+    - `validateRef`
 - [Custom Validation](#custom-validation)
-  - [Example Validator](#example-validator)
+  - Example Validator
 - [PocketBase Integration](#pocketbase-integration)
-  - [`prepareFormDataForPocketbase`](#prepareformdataforpocketbase)
-  - [`parsePocketbaseError`](#parsepocketbaseerror)
-- [License](#license)
+  - `prepareFormDataForPocketbase`
+  - `parsePocketbaseError`
 
 ## Usage
 
