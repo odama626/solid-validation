@@ -4,21 +4,24 @@
   "description": "A lightweight form validation library for Solid.js with PocketBase integration.",
   "type": "module",
   "source": "src/main.ts",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "require": "./dist/main.cjs",
-      "default": "./dist/main.modern.js"
+      "default": "./dist/main.modern.js",
+      "types": "./dist/main.d.ts"
     },
     "./pocketbase": {
       "require": "./dist/pocketbase.cjs",
-      "default": "./dist/pocketbase.modern.js"
+      "default": "./dist/pocketbase.modern.js",
+      "types": "./dist/pocketbase.d.ts"
     }
   },
   "main": "./dist/main.cjs",
   "module": "./dist/main.module.js",
   "unpkg": "./dist/main.umd.js",
   "scripts": {
-    "build": "microbundle src/*.ts",
+    "build": "microbundle src/*.ts --generateTypes",
     "dev": "microbundle watch src/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,8 +32,7 @@
     "solid-validation",
     "pocketbase",
     "typescript",
-    "frontend",
-    "microbundle"
+    "frontend"
   ],
   "author": "Sparkstone",
   "license": "ISC",
