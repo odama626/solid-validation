@@ -1,0 +1,32 @@
+{
+  "name": "@sparkstone/solid-validation",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "source": "src/main.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/main.cjs",
+      "default": "./dist/main.modern.js"
+    },
+    "./pocketbase": {
+      "require": "./dist/pocketbase.cjs",
+      "default": "./dist/pocketbase.modern.js"
+    }
+  },
+  "main": "./dist/main.cjs",
+  "module": "./dist/main.module.js",
+  "unpkg": "./dist/main.umd.js",
+  "scripts": {
+    "build": "microbundle src/*.ts",
+    "dev": "microbundle watch src/*.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "microbundle": "^0.15.1",
+    "solid-js": "^1.9.4"
+  }
+}
