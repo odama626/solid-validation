@@ -19,11 +19,14 @@ interface PocketbaseError extends Error {
   };
 }
 
-export function parsePocketbaseError(e: PocketbaseError) {
+export function parsePocketbaseError(
+  e: PocketbaseError,
+  rootErrorKey = "form",
+) {
   return {
     ...Object.fromEntries(
       Object.entries(e.data.data).map(([key, value]) => [key, value.message]),
     ),
-    form: e.message,
+    [rootErrorKey]: e.message,
   };
 }

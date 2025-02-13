@@ -1,7 +1,7 @@
 {
   "name": "@sparkstone/solid-validation",
   "version": "1.0.0",
-  "description": "",
+  "description": "A lightweight form validation library for Solid.js with PocketBase integration.",
   "type": "module",
   "source": "src/main.ts",
   "exports": {
@@ -22,9 +22,26 @@
     "dev": "microbundle watch src/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "solid-js",
+    "validation",
+    "form-validation",
+    "solid-validation",
+    "pocketbase",
+    "typescript",
+    "frontend",
+    "microbundle"
+  ],
+  "author": "Sparkstone",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/odama626/solid-validation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/odama626/solid-validation/issues"
+  },
+  "homepage": "https://github.com/odama626/solid-validation#readme",
   "devDependencies": {
     "microbundle": "^0.15.1",
     "solid-js": "^1.9.4"
