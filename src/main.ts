@@ -54,8 +54,9 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
   const [errors, setErrors] = createStore<Partial<ErrorFields>>({});
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [isSubmitted, setIsSubmitted] = createSignal(false);
-  const fields: Record<string, { element: HTMLInputElement; validators: any }> =
-    {};
+  const fields: Partial<
+    Record<keyof ErrorFields, { element: HTMLInputElement; validators: any }>
+  > = {};
 
   const validate = (ref: HTMLInputElement, accessor = () => {}) => {
     queueMicrotask(() => {
@@ -77,19 +78,41 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
     });
   };
 
+  /**
+   * Validate a field based on name
+   * returns true if the field is valid
+   **/
+  async function validateField(fieldName: keyof ErrorFields): Promise<boolean> {
+    const field = fields[fieldName];
+    if (!field) return false;
+    await checkValid(field, setErrors, errorClass)();
+    if (field.element.validationMessage) {
+      field.element.focus();
+    }
+    return !errors[fieldName];
+  }
+
+  function getFieldValue(fieldName: keyof ErrorFields) {
+    const field = fields[fieldName];
+    return field?.element.value;
+  }
+
   const formSubmit = (
     ref: HTMLFormElement,
     accessor: () => OnFormSubmit<ErrorFields>,
   ) => {
     const callback = accessor() || (() => {});
     setIsSubmitted(false);
+
     ref.setAttribute("novalidate", "");
+
     ref.onsubmit = async (e) => {
       e.preventDefault();
       let errored = false;
 
       for (const k in fields) {
         const field = fields[k];
+        if (!field) continue;
         await checkValid(field, setErrors, errorClass)();
         if (!errored && field.element.validationMessage) {
           field.element.focus();
@@ -107,7 +130,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
       if (callbackResult instanceof Object) {
         for (const name in callbackResult) {
           if (!(name in fields)) continue;
-          fields[name].element.setAttribute("aria-invalid", "true");
+          fields[name]!.element.setAttribute("aria-invalid", "true");
         }
         setErrors(callbackResult);
       } else {
@@ -136,6 +159,8 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
     errors,
     isSubmitting,
     isSubmitted,
+    validateField,
+    getFieldValue,
     validateRef:
       (...args: Parameters<typeof validate>) =>
       (ref: HTMLInputElement) =>

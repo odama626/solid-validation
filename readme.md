@@ -19,13 +19,15 @@ pnpm add @sparkstone/solid-validation
 - [Usage](#usage)
   - Basic Example
 - [API](#api)
-  - `useForm(options?)`
+  - `useForm(options?: { errorClass?: string })`
     - `validate`
     - `formSubmit`
     - `errors`
     - `isSubmitting`
     - `isSubmitted`
     - `validateRef`
+    - `validateField`
+    - `getFieldValue`
 - [Custom Validation](#custom-validation)
   - Example Validator
 - [PocketBase Integration](#pocketbase-integration)
@@ -37,23 +39,23 @@ pnpm add @sparkstone/solid-validation
 ### Basic Example
 
 ```tsx
-import { createSignal } from "solid-js";
-import { useForm } from "@sparkstone/solid-validation";
+import { createSignal } from 'solid-js';
+import { useForm } from '@sparkstone/solid-validation';
 
 function min5Characters(el: HTMLInputElement) {
   if (el.value.length < 5) {
-    return "must be at least 5 characters long";
+    return 'must be at least 5 characters long';
   }
 }
 
 function MyForm() {
   const { formSubmit, validate, errors, isSubmitting, isSubmitted } = useForm();
 
-  async function onSubmit(form) {
+  async function onSubmit(form: HTMLFormElement) {
     const formData = new FormData(form);
 
     try {
-      // await submit form
+      // Submit form data here
     } catch (e) {
       return {
         myCustomFormError: e.message,
@@ -63,28 +65,22 @@ function MyForm() {
 
   return (
     <form use:formSubmit={onSubmit}>
-      <input
-        type="text"
-        name="username"
-        placeholder="Enter username"
-        required
-        use:validate
-      />
+      <input type='text' name='username' placeholder='Enter username' required use:validate />
       <span>{errors.username}</span>
 
       <input
-        type="text"
-        name="message"
-        placeholder="Enter message"
+        type='text'
+        name='message'
+        placeholder='Enter message'
         required
-        use:validate={[min5Charaters]}
+        use:validate={[min5Characters]}
       />
       <span>{errors.message}</span>
 
       <span>{errors.myCustomFormError}</span>
 
-      <button type="submit" disabled={isSubmitting()}>
-        {isSubmitting() ? "Submitting..." : "Submit"}
+      <button type='submit' disabled={isSubmitting()}>
+        {isSubmitting() ? 'Submitting...' : 'Submit'}
       </button>
 
       {isSubmitted() && <p>Form successfully submitted!</p>}
@@ -93,7 +89,7 @@ function MyForm() {
 }
 
 function required(el: HTMLInputElement) {
-  return el.value.trim() ? false : "This field is required";
+  return el.value.trim() ? false : 'This field is required';
 }
 ```
 
@@ -105,18 +101,29 @@ Creates a form validation context.
 
 #### Returns:
 
-- `validate(ref: HTMLInputElement, validators?: Validator[])`
-  - Registers an input for validation.
-- `formSubmit(ref: HTMLFormElement, callback: OnFormSubmit)`
-  - Handles form submission, running all validations.
-- `errors: Partial<Record<string, string>>`
-  - Reactive store of validation errors.
-- `isSubmitting: () => boolean`
-  - Tracks whether the form is currently submitting.
-- `isSubmitted: () => boolean`
-  - Tracks whether the form was successfully submitted.
-- `validateRef: (...args: Parameters<typeof validate>) => (ref: HTMLInputElement) => void`
-  - if you're validating a custom element you can pass this in with `ref={validateRef()}`
+- `validate(ref: HTMLInputElement, validators?: Validator[])`  
+  Registers an input for validation.
+
+- `formSubmit(ref: HTMLFormElement, callback: OnFormSubmit)`  
+  Handles form submission, running all validations.
+
+- `errors: Partial<Record<string, string>>`  
+  Reactive store of validation errors.
+
+- `isSubmitting: () => boolean`  
+  Tracks whether the form is currently submitting.
+
+- `isSubmitted: () => boolean`  
+  Tracks whether the form was successfully submitted.
+
+- `validateRef: (...args: Parameters<typeof validate>) => (ref: HTMLInputElement) => void`  
+  If you're validating a custom element, you can pass this in with `ref={validateRef()}`.
+
+- `validateField(fieldName: keyof ErrorFields): Promise<boolean>`
+  Validates a field based on its name. It returns `true` if the field is valid. If the field fails validation, it automatically focuses the field and updates the error state.
+
+- `getFieldValue(fieldName: keyof ErrorFields)`
+  Retrieves the current value of the specified field. This is useful when you need to access a field’s value programmatically during form interactions.
 
 ### Custom Validation
 
@@ -130,7 +137,7 @@ Example:
 
 ```tsx
 function minLength(el: HTMLInputElement) {
-  return el.value.length < 5 && "Must be at least 5 characters";
+  return el.value.length < 5 && 'Must be at least 5 characters';
 }
 ```
 
@@ -145,7 +152,7 @@ PocketBase does not include unchecked checkboxes in `FormData` submissions. This
 #### Example:
 
 ```ts
-import { prepareFormDataForPocketbase } from "@sparkstone/solid-validation/pocketbase";
+import { prepareFormDataForPocketbase } from '@sparkstone/solid-validation/pocketbase';
 
 function handleSubmit(event: Event) {
   event.preventDefault();
@@ -165,7 +172,7 @@ PocketBase API errors return a structured `data` object. This function extracts 
 #### Example:
 
 ```ts
-import { parsePocketbaseError } from "@sparkstone/solid-validation/pocketbase";
+import { parsePocketbaseError } from '@sparkstone/solid-validation/pocketbase';
 
 async function handleSubmit(event: Event) {
   event.preventDefault();
@@ -174,7 +181,7 @@ async function handleSubmit(event: Event) {
 
   try {
     // Replace with your PocketBase API call
-    await pocketbase.collection("users").create(formData);
+    await pocketbase.collection('users').create(formData);
   } catch (e) {
     const errors = parsePocketbaseError(e);
     console.log(errors); // { email: "Invalid email", password: "Too short", form: "Something went wrong" }
