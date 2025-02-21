@@ -1,12 +1,14 @@
 import { createSignal } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 
-type Falsy = false | 0 | "" | null | undefined;
+type Falsy = false | 0 | "" | null | undefined | void;
 type MaybePromise<T> = T | Promise<T>;
 
 type ValidatorResponse = MaybePromise<string | Falsy>;
 
-type Validator = (el: HTMLInputElement) => ValidatorResponse;
+type Validator<Element> = Falsy | ((el: Element) => ValidatorResponse);
+
+type ValidatedElement = HTMLElement & { name: string };
 
 type OnFormSubmit<ErrorFields extends Object> = (
   el: HTMLFormElement,
@@ -16,7 +18,7 @@ declare module "solid-js" {
   namespace JSX {
     interface Directives {
       formSubmit: (callback: HTMLFormElement) => any;
-      validate: boolean | Validator[];
+      validate: boolean | Validator<any>[];
     }
   }
 }
@@ -24,16 +26,18 @@ function checkValid<ErrorFields extends Object>(
   {
     element,
     validators = [],
-  }: { element: HTMLInputElement; validators: Validator[] },
+  }: { element: HTMLInputElement; validators: Validator<unknown>[] },
   setErrors: SetStoreFunction<Partial<ErrorFields>>,
   errorClass?: string,
 ) {
   return async () => {
     element.setCustomValidity("");
     element.checkValidity();
+
     let message = element.validationMessage;
     if (!message) {
       for (const validator of validators) {
+        if (!validator) continue;
         const text = await validator(element);
         if (text) {
           message = text;
@@ -59,7 +63,10 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
     Record<keyof ErrorFields, { element: HTMLInputElement; validators: any }>
   > = {};
 
-  const validate = (ref: HTMLInputElement, accessor = () => {}) => {
+  const validate = <Element extends ValidatedElement>(
+    ref: Element,
+    accessor: () => Falsy | Validator<Element>[] = () => {},
+  ) => {
     queueMicrotask(() => {
       const accessorValue = accessor();
       const validators = Array.isArray(accessorValue) ? accessorValue : [];
@@ -163,8 +170,8 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
     validateField,
     getFieldValue,
     validateRef:
-      (...args: Parameters<typeof validate>) =>
-      (ref: HTMLInputElement) =>
+      <Element extends ValidatedElement>(...args: Validator<Element>[]) =>
+      (ref: Element) =>
         validate(ref, () => args),
   };
 }
