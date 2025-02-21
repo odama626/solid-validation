@@ -36,17 +36,18 @@ function checkValid<ErrorFields extends Object>(
       for (const validator of validators) {
         const text = await validator(element);
         if (text) {
+          message = text;
           element.setCustomValidity(text);
           break;
         }
       }
-      message = element.validationMessage;
     }
     if (message) {
       errorClass && element.classList.toggle(errorClass, true);
       element.setAttribute("aria-invalid", "true");
       setErrors({ [element.name]: message } as Partial<ErrorFields>);
     }
+    return message;
   };
 }
 
@@ -113,8 +114,8 @@ export function useForm<ErrorFields extends Object>({ errorClass = "" } = {}) {
       for (const k in fields) {
         const field = fields[k];
         if (!field) continue;
-        await checkValid(field, setErrors, errorClass)();
-        if (!errored && field.element.validationMessage) {
+        let error = await checkValid(field, setErrors, errorClass)();
+        if (!errored && (field.element.validationMessage || error)) {
           field.element.focus();
           if (document.contains(field.element)) {
             errored = true;
