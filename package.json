@@ -1,6 +1,6 @@
 {
   "name": "@sparkstone/solid-validation",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A lightweight form validation library for Solid.js with PocketBase integration.",
   "type": "module",
   "source": "src/main.ts",
