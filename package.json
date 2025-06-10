@@ -38,6 +38,13 @@
     "typescript",
     "frontend"
   ],
+  "prettier": {
+    "jsxSingleQuote": true,
+    "bracketSameLine": true,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "printWidth": 100
+  },
   "author": "Sparkstone",
   "license": "ISC",
   "repository": {

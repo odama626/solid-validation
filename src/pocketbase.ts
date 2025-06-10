@@ -25,7 +25,7 @@ export function parsePocketbaseError(e: Error, rootErrorKey = 'form') {
   if (isPocketbaseFieldError(e)) {
     Object.assign(
       result,
-      Object.fromEntries(Object.entries(e.data.data).map(([key, value]) => [key, value.message]))
+      Object.fromEntries(Object.entries(e.data.data).map(([key, value]) => [key, value.message])),
     );
   }
   return result;

@@ -10,8 +10,8 @@ export type Validator<Element> = Falsy | ((el: Element) => ValidatorResponse);
 
 type ValidatedElement = HTMLElement & { name: string };
 
-type OnFormSubmit<ErrorFields extends Object> = (
-  el: HTMLFormElement
+type OnFormSubmit<ErrorFields extends Object, Payload> = (
+  el: Payload,
 ) => MaybePromise<void | Partial<ErrorFields>>;
 
 declare module 'solid-js' {
@@ -25,11 +25,11 @@ declare module 'solid-js' {
 function checkValid<ErrorFields extends Object>(
   { element, validators = [] }: { element: HTMLInputElement; validators: Validator<unknown>[] },
   setErrors: SetStoreFunction<Partial<ErrorFields>>,
-  errorClass?: string
+  errorClass?: string,
 ) {
   return async () => {
-    element.setCustomValidity('');
-    element.checkValidity();
+    element.setCustomValidity?.('');
+    element.checkValidity?.();
 
     let message = element.validationMessage;
     if (!message) {
@@ -38,7 +38,7 @@ function checkValid<ErrorFields extends Object>(
         const text = await validator(element);
         if (text) {
           message = text;
-          element.setCustomValidity(text);
+          element.setCustomValidity?.(text);
           break;
         }
       }
@@ -46,7 +46,9 @@ function checkValid<ErrorFields extends Object>(
     if (message) {
       errorClass && element.classList.toggle(errorClass, true);
       element.setAttribute('aria-invalid', 'true');
-      setErrors({ [element.name]: message } as Partial<ErrorFields>);
+      setErrors({
+        [element.name ?? element.dataset.name]: message,
+      } as Partial<ErrorFields>);
     }
     return message;
   };
@@ -61,21 +63,22 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
 
   const validate = <Element extends ValidatedElement>(
     ref: Element,
-    accessor: () => Falsy | Validator<Element>[] = () => {}
+    accessor: () => Falsy | Validator<Element>[] = () => {},
   ) => {
     queueMicrotask(() => {
+      let name = ref.name ?? ref.dataset.name;
       const accessorValue = accessor();
       const validators = Array.isArray(accessorValue) ? accessorValue : [];
       let config;
-      fields[ref.name] = config = { element: ref, validators };
+      fields[name] = config = { element: ref, validators };
       ref.onblur = () => {
         setIsSubmitted(false);
         return checkValid(config, setErrors, errorClass);
       };
       ref.oninput = () => {
         setIsSubmitted(false);
-        if (!errors[ref.name]) return;
-        setErrors({ [ref.name]: undefined } as Partial<ErrorFields>);
+        if (!errors[name]) return;
+        setErrors({ [name]: undefined } as Partial<ErrorFields>);
         ref.setAttribute('aria-invalid', 'false');
         errorClass && ref.classList.toggle(errorClass, false);
       };
@@ -89,9 +92,10 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
   async function validateField(fieldName: keyof ErrorFields): Promise<boolean> {
     const field = fields[fieldName];
     if (!field) return false;
-    await checkValid(field, setErrors, errorClass)();
-    if (field.element.validationMessage) {
+    let error = await checkValid(field, setErrors, errorClass)();
+    if (field.element.validationMessage || error) {
       field.element.focus();
+      field.element.scrollIntoView({ behavior: 'smooth' });
     }
     return !errors[fieldName];
   }
@@ -101,7 +105,52 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
     return field?.element.value;
   }
 
-  const formSubmit = (ref: HTMLFormElement, accessor: () => OnFormSubmit<ErrorFields>) => {
+  async function submit<Payload>(callback: OnFormSubmit<ErrorFields, Payload>, ref: Payload) {
+    let errored = false;
+
+    for (const k in fields) {
+      const field = fields[k];
+      if (!field) continue;
+      let error = await checkValid(field, setErrors, errorClass)();
+      if (!errored && (field.element.validationMessage || error)) {
+        field.element.focus();
+        field.element.scrollIntoView({ behavior: 'smooth' });
+        if (document.contains(field.element)) {
+          errored = true;
+        } else {
+          delete fields[k];
+        }
+      }
+    }
+    if (errored) return;
+    setIsSubmitting(true);
+    let callbackResult = await callback(ref);
+    setIsSubmitting(false);
+    if (callbackResult instanceof Object) {
+      for (const name in callbackResult) {
+        if (!(name in fields)) continue;
+        fields[name]!.element.setAttribute('aria-invalid', 'true');
+      }
+      setErrors(callbackResult);
+    } else {
+      clearErrors();
+      setIsSubmitted(true);
+    }
+  }
+
+  function clearErrors() {
+    setErrors(
+      errors =>
+        Object.fromEntries(
+          Object.entries(errors).map(([key, value]) => [key, undefined]),
+        ) as Partial<ErrorFields>,
+    );
+  }
+
+  const formSubmit = (
+    ref: HTMLFormElement,
+    accessor: () => OnFormSubmit<ErrorFields, HTMLFormElement>,
+  ) => {
     const callback = accessor() || (() => {});
     setIsSubmitted(false);
 
@@ -109,45 +158,9 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
 
     ref.onsubmit = async e => {
       e.preventDefault();
-      let errored = false;
 
-      for (const k in fields) {
-        const field = fields[k];
-        if (!field) continue;
-        let error = await checkValid(field, setErrors, errorClass)();
-        if (!errored && (field.element.validationMessage || error)) {
-          field.element.focus();
-          if (document.contains(field.element)) {
-            errored = true;
-          } else {
-            delete fields[k];
-          }
-        }
-      }
-      if (errored) return;
-      setIsSubmitting(true);
-      let callbackResult = await callback(ref);
-      setIsSubmitting(false);
-      if (callbackResult instanceof Object) {
-        for (const name in callbackResult) {
-          if (!(name in fields)) continue;
-          fields[name]!.element.setAttribute('aria-invalid', 'true');
-        }
-        setErrors(callbackResult);
-      } else {
-        clearErrors();
-        setIsSubmitted(true);
-      }
+      await submit(callback, ref);
     };
-
-    function clearErrors() {
-      setErrors(
-        errors =>
-          Object.fromEntries(
-            Object.entries(errors).map(([key, value]) => [key, undefined])
-          ) as Partial<ErrorFields>
-      );
-    }
 
     ref.onreset = () => {
       clearErrors();
@@ -157,6 +170,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
   return {
     validate,
     formSubmit,
+    submit,
     errors,
     isSubmitting,
     isSubmitted,
