@@ -1,6 +1,6 @@
 # @sparkstone/solid-validation
 
-A lightweight and flexible form validation library for Solid.js. It provides a simple API to validate form inputs, handle submission state, and manage error messages.
+A lightweight and flexible validation library for Solid.js. It provides a simple API to validate form inputs, handle submission state, and manage error messages. It now also supports validation outside of forms and inputs.
 
 ## Installation
 
@@ -17,26 +17,30 @@ pnpm add @sparkstone/solid-validation
 ## Table of Contents
 
 - [Usage](#usage)
+
   - Basic Example
+  - Non-Form Validation
+
 - [API](#api)
+
   - `useForm(options?: { errorClass?: string })`
+
     - `validate`
     - `formSubmit`
+    - `submit`
     - `errors`
     - `isSubmitting`
     - `isSubmitted`
     - `validateRef`
     - `validateField`
     - `getFieldValue`
+
 - [Custom Validation](#custom-validation)
-  - Example Validator
 - [PocketBase Integration](#pocketbase-integration)
-  - `prepareFormDataForPocketbase`
-  - `parsePocketbaseError`
 
 ## Usage
 
-### Basic Example
+### Basic Example (Form Based)
 
 ```tsx
 import { createSignal } from 'solid-js';
@@ -93,45 +97,60 @@ function required(el: HTMLInputElement) {
 }
 ```
 
+### Validation Outside of Forms and Inputs
+
+You can now validate any element, not just form inputs:
+
+```tsx
+<div use:validate={[myCustomValidator]} data-name='customField'></div>
+```
+
+- When using `use:validate` on non-input elements, you **must** supply a `data-name` attribute for error tracking.
+- Validation can also be triggered manually using the `submit()` function, even without a form.
+- On validation failure, the library will automatically scroll the invalid element into view and focus it if possible.
+
 ## API
 
 ### `useForm(options?: { errorClass?: string })`
 
-Creates a form validation context.
+Creates a validation context.
 
 #### Returns:
 
-- `validate(ref: HTMLInputElement, validators?: Validator[])`  
-  Registers an input for validation.
+- `validate(ref: HTMLElement, validators?: Validator[])`
+  Registers an element for validation. Can be used on both form inputs and other HTML elements.
 
-- `formSubmit(ref: HTMLFormElement, callback: OnFormSubmit)`  
+- `formSubmit(ref: HTMLFormElement, callback: OnFormSubmit)`
   Handles form submission, running all validations.
 
-- `errors: Partial<Record<string, string>>`  
+- `submit(): Promise<boolean>`
+  Triggers validation manually. Useful for standalone validations without a form.
+
+- `errors: Partial<Record<string, string>>`
   Reactive store of validation errors.
 
-- `isSubmitting: () => boolean`  
+- `isSubmitting: () => boolean`
   Tracks whether the form is currently submitting.
 
-- `isSubmitted: () => boolean`  
+- `isSubmitted: () => boolean`
   Tracks whether the form was successfully submitted.
 
-- `validateRef: (...args: Parameters<typeof validate>) => (ref: HTMLInputElement) => void`  
-  If you're validating a custom element, you can pass this in with `ref={validateRef()}`.
+- `validateRef: (...args: Parameters<typeof validate>) => (ref: HTMLElement) => void`
+  Pass this in with `ref={validateRef()}` for programmatic attachment.
 
 - `validateField(fieldName: keyof ErrorFields): Promise<boolean>`
-  Validates a field based on its name. It returns `true` if the field is valid. If the field fails validation, it automatically focuses the field and updates the error state.
+  Validates a field by name. Automatically scrolls and focuses failing elements.
 
 - `getFieldValue(fieldName: keyof ErrorFields)`
-  Retrieves the current value of the specified field. This is useful when you need to access a field’s value programmatically during form interactions.
+  Retrieves the current value of the field.
 
-### Custom Validation
+## Custom Validation
 
-A validator function receives an `HTMLInputElement` and returns:
+Validator functions receive an `HTMLElement` and return:
 
-- `false | "" | null | undefined` for valid inputs.
+- `false | '' | null | undefined` for valid inputs.
 - A `string` error message for invalid inputs.
-- A `Promise<string | Falsy>` for async validation.
+- Or a `Promise<string | Falsy>` for async validation.
 
 Example:
 
@@ -143,13 +162,13 @@ function minLength(el: HTMLInputElement) {
 
 ## PocketBase Integration
 
-For integrating form validation with [PocketBase](https://pocketbase.io/), this package provides helper functions to prepare form data and handle errors from PocketBase responses.
+For integrating validation with [PocketBase](https://pocketbase.io/), this package includes helper functions:
 
 ### `prepareFormDataForPocketbase(formData: FormData, form: HTMLFormElement)`
 
-PocketBase does not include unchecked checkboxes in `FormData` submissions. This function ensures that all checkbox fields are included, defaulting to `"false"` if unchecked.
+Ensures unchecked checkboxes are properly submitted to PocketBase.
 
-#### Example:
+Example:
 
 ```ts
 import { prepareFormDataForPocketbase } from '@sparkstone/solid-validation/pocketbase';
@@ -160,16 +179,12 @@ function handleSubmit(event: Event) {
   const formData = new FormData(form);
 
   prepareFormDataForPocketbase(formData, form);
-
-  // Now formData is ready to be sent to PocketBase
 }
 ```
 
-### `parsePocketbaseError(error: PocketbaseError, rootErrorKey = "form")`
+### `parsePocketbaseError(error: PocketbaseError, rootErrorKey = 'form')`
 
-PocketBase API errors return a structured `data` object. This function extracts error messages and formats them for easy use in your validation logic.
-
-#### Example:
+Extracts error messages from PocketBase responses:
 
 ```ts
 import { parsePocketbaseError } from '@sparkstone/solid-validation/pocketbase';
@@ -180,17 +195,14 @@ async function handleSubmit(event: Event) {
   const formData = new FormData(form);
 
   try {
-    // Replace with your PocketBase API call
     await pocketbase.collection('users').create(formData);
   } catch (e) {
     const errors = parsePocketbaseError(e);
-    console.log(errors); // { email: "Invalid email", password: "Too short", form: "Something went wrong" }
+    console.log(errors);
   }
 }
 ```
 
-This allows for easy mapping of errors to form fields and a general error message under the `"form"` key.
-
 ---
 
-These functions help streamline form submissions and error handling when using PocketBase as your backend.
+These tools simplify form handling and error mapping when using PocketBase with Solid.js.
