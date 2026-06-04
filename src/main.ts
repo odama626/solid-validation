@@ -105,7 +105,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
     return field?.element.value;
   }
 
-  async function submit<Payload>(callback: OnFormSubmit<ErrorFields, Payload>, ref: Payload) {
+  async function submit<Payload>(callback: OnFormSubmit<ErrorFields, Payload>, ref?: Payload) {
     let errored = false;
 
     for (const k in fields) {
