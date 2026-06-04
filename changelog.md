@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.2] - 2026-06-04
+- `submit` payload is now optional since it is only expected to be used by `formSubmit`
+- enhanced documentation 
+
 ## [1.5.1] - 2026-05-06
 
 ### Fixed
