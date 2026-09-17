@@ -16,7 +16,8 @@
     "sharp": "^0.33.5",
     "solid-js": "^1.9.4",
     "@sparkstone/css": "^1.7.2",
-    "sass": "^1.80.0"
+    "sass": "^1.80.0",
+    "@sparkstone/solid-validation": "workspace:^"
   },
   "devDependencies": {}
 }

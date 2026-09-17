@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const id = process.argv[2];
 if (!id) throw new Error('usage: collect.mjs <version-id>');
 
-const candidates = [`../${id}/dist/client`, `../${id}/dist`];
+const candidates = [`../versions/${id}/dist/client`, `../versions/${id}/dist`];
 const from = candidates
   .map(p => fileURLToPath(new URL(p, import.meta.url)))
   .find(p => existsSync(p));

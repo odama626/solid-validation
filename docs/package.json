@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm build:v1 && pnpm build:v2 && pnpm build:root",
+    "build": "pnpm --filter @sparkstone/solid-validation build && pnpm build:v1 && pnpm build:v2 && pnpm build:root",
     "build:v1": "pnpm --filter solid-validation-docs-v1 build && node ./scripts/collect.mjs v1",
     "build:v2": "pnpm --filter solid-validation-docs-v2 build && node ./scripts/collect.mjs v2",
     "build:root": "node ./root/build.mjs",

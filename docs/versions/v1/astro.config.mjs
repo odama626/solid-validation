@@ -56,12 +56,6 @@ export default defineConfig({
   ],
   vite: {
     resolve: {
-      // Demos import the published specifier but resolve to source, so the
-      // docs can never drift from what is in src/.
-      alias: {
-        '@sparkstone/solid-validation/pocketbase': src('../../src/pocketbase.ts'),
-        '@sparkstone/solid-validation': src('../../src/main.ts'),
-      },
       dedupe: ['solid-js', 'solid-js/web', 'solid-js/store'],
     },
   },

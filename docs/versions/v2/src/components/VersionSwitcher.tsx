@@ -1,6 +1,6 @@
 import { Select } from '@kobalte/core/select';
 import { Show, createEffect, createSignal } from 'solid-js';
-import versions from '../../../versions.json';
+import versions from '../../../../versions.json';
 
 type Version = { id: string; label: string; path: string; prerelease?: boolean };
 

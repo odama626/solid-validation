@@ -1,14 +1,12 @@
 packages:
-  - docs/v1
-  - docs/v2
+  - .
+  - docs/versions/*
 
 allowBuilds:
   esbuild: true
   sharp: true
   '@parcel/watcher': true
 
-# Each documentation version is a standalone site with its own Solid. v1 is
-# Astro on Solid 1 and documents the 1.x library; v2 is Solid 2.
 overrides:
   '@kobalte/core>solid-js': 2.0.0-rc.8
   '@kobalte/core>@solidjs/web': 2.0.0-rc.8

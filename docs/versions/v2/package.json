@@ -14,7 +14,8 @@
     "@solidjs/web": "2.0.0-rc.8",
     "@sparkstone/css": "^1.7.2",
     "markdown-it": "^15.0.2",
-    "solid-js": "2.0.0-rc.8"
+    "solid-js": "2.0.0-rc.8",
+    "@sparkstone/solid-validation": "workspace:^"
   },
   "devDependencies": {
     "@solidjs/prerender": "^0.2.0",
