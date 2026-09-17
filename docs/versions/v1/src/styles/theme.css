@@ -28,3 +28,42 @@
   padding-top: 1.25rem;
   border-top: 1px solid oklch(from var(--color) var(--surface-lc-3) h);
 }
+
+/*
+ * Starlight's search is a bare <dialog>, and the classless build styles bare
+ * dialogs as full-viewport flex-centred overlays. Starlight does not set those
+ * properties itself, so nothing unlayered competes and the layered rules take
+ * over its modal. These selectors are unlayered, so they win, and hand the
+ * dialog back to Starlight's own layout.
+ */
+site-search dialog {
+  display: revert;
+  position: revert;
+  inset: revert;
+  justify-content: revert;
+  align-items: revert;
+  min-height: revert;
+  backdrop-filter: revert;
+  z-index: revert;
+}
+
+site-search dialog > form {
+  width: revert;
+  max-height: revert;
+}
+
+site-search dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(4px);
+}
+
+/* The Ctrl+K hint in the search button. */
+site-search kbd {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid oklch(from var(--color) var(--surface-lc-4) h);
+  border-radius: 0.25rem;
+  background: oklch(from var(--color) var(--surface-lc-2) h);
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
