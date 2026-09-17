@@ -7,7 +7,15 @@ import { fileURLToPath } from 'node:url';
 const id = process.argv[2];
 if (!id) throw new Error('usage: collect.mjs <version-id>');
 
-const candidates = [`../versions/${id}/dist/client`, `../versions/${id}/dist`];
+// A version site carries its own /<id> prefix internally, either through a
+// framework base (astro) or a route segment (solid). Prefer the already
+// prefixed subtree so the output is not nested twice.
+const candidates = [
+  `../versions/${id}/dist/client/${id}`,
+  `../versions/${id}/dist/${id}`,
+  `../versions/${id}/dist/client`,
+  `../versions/${id}/dist`,
+];
 const from = candidates
   .map(p => fileURLToPath(new URL(p, import.meta.url)))
   .find(p => existsSync(p));
