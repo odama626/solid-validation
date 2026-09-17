@@ -1,0 +1,13 @@
+/* Layer order matters: Starlight's own styles sit between Tailwind's theme and
+   utilities so utility classes can still win. */
+@layer base, starlight, theme, components, utilities;
+
+@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Starlight puts data-theme="light" | "dark" on <html>, and daisyUI reads the
+   same attribute, so the built-in theme toggle drives both with no extra JS. */
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}

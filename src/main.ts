@@ -4,20 +4,20 @@ import { createStore, SetStoreFunction } from 'solid-js/store';
 type Falsy = false | 0 | '' | null | undefined | void;
 type MaybePromise<T> = T | Promise<T>;
 
+export type OnFormSubmitResult<T> = MaybePromise<void | Partial<ErrorFields>>;
+
 type ValidatorResponse = MaybePromise<string | Falsy>;
 
 export type Validator<Element> = Falsy | ((el: Element) => ValidatorResponse);
 
 type ValidatedElement = HTMLElement & { name: string };
 
-type OnFormSubmit<ErrorFields extends Object, Payload> = (
-  el: Payload,
-) => MaybePromise<void | Partial<ErrorFields>>;
+type OnFormSubmit<ErrorFields extends Object, Payload> = (el: Payload) => OnFormSubmitResult;
 
 declare module 'solid-js' {
   namespace JSX {
     interface Directives {
-      formSubmit: (callback: HTMLFormElement) => any;
+      formSubmit: (callback: HTMLFormElement) => OnFormSubmitResult;
       validate: boolean | Validator<any>[];
     }
   }
@@ -73,7 +73,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
       fields[name] = config = { element: ref, validators };
       ref.onblur = () => {
         setIsSubmitted(false);
-        return checkValid(config, setErrors, errorClass);
+        return checkValid(config, setErrors, errorClass)();
       };
       ref.oninput = () => {
         setIsSubmitted(false);

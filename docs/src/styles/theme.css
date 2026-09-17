@@ -1,0 +1,26 @@
+/* Typography, plus a bridge so Starlight's chrome uses the same palette daisyUI
+   gives the demos. Component colour now comes from daisyUI, not from here. */
+:root {
+  --sl-font: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --sl-color-accent: var(--color-primary);
+  --sl-color-accent-low: color-mix(in oklch, var(--color-primary) 25%, var(--color-base-100));
+  --sl-color-accent-high: color-mix(in oklch, var(--color-primary) 70%, white);
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-high: color-mix(in oklch, var(--color-primary) 80%, black);
+}
+
+/* Inter runs loose at display sizes. */
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+  letter-spacing: -0.018em;
+}
+
+.sl-markdown-content p,
+.sl-markdown-content li {
+  max-width: 68ch;
+}

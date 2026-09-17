@@ -1,0 +1,73 @@
+---
+title: Validating a form
+description: How use:validate and use:formSubmit work together, and when validation actually runs.
+---
+
+import BasicFormDemo from '../../../components/BasicFormDemo.tsx';
+
+Two directives cover the common case. `use:validate` registers a field. `use:formSubmit` takes over the form's submit event.
+
+```tsx
+import { useForm } from '@sparkstone/solid-validation';
+
+function SignupForm() {
+  const { formSubmit, validate, errors, isSubmitting, isSubmitted } = useForm();
+
+  async function onSubmit(form: HTMLFormElement) {
+    await api.signup(new FormData(form));
+  }
+
+  return (
+    <form use:formSubmit={onSubmit}>
+      <input type='email' name='email' required use:validate />
+      <span>{errors.email}</span>
+
+      <button type='submit' disabled={isSubmitting()}>
+        {isSubmitting() ? 'Saving' : 'Save'}
+      </button>
+      {isSubmitted() && <p>Saved</p>}
+    </form>
+  );
+}
+```
+
+<BasicFormDemo client:visible />
+
+## When validation runs
+
+| Event | What happens |
+| --- | --- |
+| Blur | The field is checked. A failure writes to `errors` and sets `aria-invalid="true"`. |
+| Input | If that field is already showing an error, the error is cleared and `aria-invalid` goes back to `"false"`. `isSubmitted` resets to `false`. |
+| Submit | Every registered field is checked in registration order. The first failure is focused and scrolled into view, and your callback does not run. |
+| Reset | All errors are cleared. |
+
+Nothing is checked on the first keystroke into an untouched field, which is what makes the form quiet while someone is still filling it in.
+
+## Field names
+
+The key in `errors` comes from the element's `name` attribute, falling back to `data-name`. A field with neither is registered under an empty string, so give every field one or the other.
+
+## Submitting
+
+`formSubmit` calls `preventDefault()` and adds `novalidate` to the form element, which is what stops the browser's own error bubbles from appearing on top of yours.
+
+Your callback receives the form element. Returning nothing means success: errors are cleared and `isSubmitted` becomes `true`. Returning an object means failure, and its keys are merged into `errors`. See [Server-side errors](/solid-validation/guides/server-errors/).
+
+## Styling invalid fields
+
+Every failing element gets `aria-invalid="true"`, which is enough to style against and is what a screen reader reads:
+
+```css
+input[aria-invalid='true'] {
+  border-color: var(--error);
+}
+```
+
+If you would rather use a class, pass one to `useForm`:
+
+```tsx
+const { validate } = useForm({ errorClass: 'is-invalid' });
+```
+
+The class is toggled on alongside `aria-invalid` and removed on the next input.
