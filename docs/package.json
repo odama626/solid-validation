@@ -14,11 +14,13 @@
     "@solidjs/router": "2.0.0-next.24",
     "@solidjs/web": "2.0.0-rc.8",
     "@sparkstone/css": "^1.7.2",
+    "markdown-it": "^15.0.2",
     "solid-js": "2.0.0-rc.8"
   },
   "devDependencies": {
     "@solidjs/prerender": "^0.2.0",
     "@solidjs/vite-plugin": "^3.0.0-next.43",
+    "@types/markdown-it": "^14.2.0",
     "filesystem-routing": "0.2.1",
     "prerender-crawler": "^0.2.0",
     "sass": "^1.80.0",

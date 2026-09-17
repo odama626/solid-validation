@@ -5,28 +5,28 @@ const sections = [
   {
     title: 'Start here',
     links: [
-      { href: '/', label: 'Overview' },
-      { href: '/quick-start', label: 'Quick start' },
+      { href: '/v1', label: 'Overview' },
+      { href: '/v1/quick-start', label: 'Quick start' },
     ],
   },
   {
     title: 'Guides',
     links: [
-      { href: '/guides/validators', label: 'Writing validators' },
-      { href: '/guides/server-errors', label: 'Server-side errors' },
-      { href: '/guides/outside-forms', label: 'Outside a form' },
-      { href: '/guides/child-components', label: 'Child components' },
-      { href: '/guides/pocketbase', label: 'PocketBase' },
+      { href: '/v1/guides/validators', label: 'Writing validators' },
+      { href: '/v1/guides/server-errors', label: 'Server-side errors' },
+      { href: '/v1/guides/outside-forms', label: 'Outside a form' },
+      { href: '/v1/guides/child-components', label: 'Child components' },
+      { href: '/v1/guides/pocketbase', label: 'PocketBase' },
     ],
   },
   {
     title: 'API',
     links: [
-      { href: '/api/use-form', label: 'useForm' },
-      { href: '/api/types', label: 'Types' },
+      { href: '/v1/api/use-form', label: 'useForm' },
+      { href: '/v1/api/types', label: 'Types' },
     ],
   },
-  { title: 'Help', links: [{ href: '/troubleshooting', label: 'Troubleshooting' }] },
+  { title: 'Help', links: [{ href: '/v1/troubleshooting', label: 'Troubleshooting' }] },
 ];
 
 export default function Sidebar() {
