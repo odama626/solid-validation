@@ -1,4 +1,6 @@
-@use '@sparkstone/css/src/theme.scss';
+// The classless build styles bare semantic elements, which is what the docs
+// markup and the demos use. The default export is the class-based build.
+@use '@sparkstone/css/src/classless.scss';
 
 /*
  * Layout modelled on the daisyUI docs: translucent sticky navbar, left rail of

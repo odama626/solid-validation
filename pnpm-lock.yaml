@@ -66,8 +66,8 @@ importers:
         specifier: ^5.1.0
         version: 5.3.0
       '@sparkstone/css':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^2.0.0
+        version: 2.0.0
       '@sparkstone/solid-validation':
         specifier: workspace:^
         version: link:../../..
@@ -99,8 +99,8 @@ importers:
         specifier: 2.0.0-rc.8
         version: 2.0.0-rc.8(solid-js@2.0.0-rc.8)
       '@sparkstone/css':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^2.0.0
+        version: 2.0.0
       '@sparkstone/solid-validation':
         specifier: workspace:^
         version: link:../../..
@@ -1858,8 +1858,8 @@ packages:
     peerDependencies:
       solid-js: ^2.0.0-rc.8
 
-  '@sparkstone/css@1.7.2':
-    resolution: {integrity: sha512-q5qiJMsKQ8+uqGktiB2PlLebi13A5PAx++EPYjDN9AcbsF4JIyCSEIF+Ufuv3wxgKHCio3C/avIfV/cQZq1u9g==}
+  '@sparkstone/css@2.0.0':
+    resolution: {integrity: sha512-PdzK83KTAtlHRdJjWWMzi8fg0E40I7Bkdd7DX9IqgCrbjnknVWe3YAfvYZlbF/b/RfaC9I6LHOdPuRfPMbRvIg==}
 
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
@@ -5676,7 +5676,7 @@ snapshots:
       seroval-plugins: 1.6.7(seroval@1.6.7)
       solid-js: 2.0.0-rc.8
 
-  '@sparkstone/css@1.7.2': {}
+  '@sparkstone/css@2.0.0': {}
 
   '@swc/helpers@0.5.23':
     dependencies:

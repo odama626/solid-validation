@@ -28,7 +28,7 @@ export default defineConfig({
         '@fontsource/ibm-plex-mono/400.css',
         '@fontsource/ibm-plex-mono/600.css',
         './src/styles/demo.css',
-        '@sparkstone/css/dist/theme.css',
+        '@sparkstone/css/classless',
         './src/styles/theme.css',
       ],
       sidebar: [

@@ -12,7 +12,7 @@
     "@solidjs/meta": "1.0.0-next.2",
     "@solidjs/router": "2.0.0-next.24",
     "@solidjs/web": "2.0.0-rc.8",
-    "@sparkstone/css": "^1.7.2",
+    "@sparkstone/css": "^2.0.0",
     "markdown-it": "^15.0.2",
     "solid-js": "2.0.0-rc.8",
     "@sparkstone/solid-validation": "workspace:^"
