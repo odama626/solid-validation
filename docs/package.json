@@ -1,0 +1,28 @@
+{
+  "name": "solid-validation-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm --filter solid-validation-demos build && vite build",
+    "preview": "vite preview",
+    "build:demos": "pnpm --filter solid-validation-demos build"
+  },
+  "dependencies": {
+    "@kobalte/core": "2.0.0-alpha.2",
+    "@solidjs/meta": "1.0.0-next.2",
+    "@solidjs/router": "2.0.0-next.24",
+    "@solidjs/web": "2.0.0-rc.8",
+    "@sparkstone/css": "^1.7.2",
+    "solid-js": "2.0.0-rc.8"
+  },
+  "devDependencies": {
+    "@solidjs/prerender": "^0.2.0",
+    "@solidjs/vite-plugin": "^3.0.0-next.43",
+    "filesystem-routing": "0.2.1",
+    "prerender-crawler": "^0.2.0",
+    "sass": "^1.80.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.2"
+  }
+}

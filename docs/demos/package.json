@@ -1,0 +1,17 @@
+{
+  "name": "solid-validation-demos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@sparkstone/css": "^1.7.2",
+    "solid-js": "1.9.15"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2",
+    "vite-plugin-solid": "^2.11.0"
+  }
+}
