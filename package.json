@@ -1,31 +1,35 @@
 {
   "name": "@sparkstone/solid-validation",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A lightweight form validation library for Solid.js with PocketBase integration.",
   "type": "module",
   "source": "src/main.ts",
   "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/main.d.ts",
       "require": "./dist/main.cjs",
-      "default": "./dist/main.modern.js",
-      "types": "./dist/main.d.ts"
+      "default": "./dist/main.js"
     },
     "./pocketbase": {
+      "types": "./dist/pocketbase.d.ts",
       "require": "./dist/pocketbase.cjs",
-      "default": "./dist/pocketbase.modern.js",
-      "types": "./dist/pocketbase.d.ts"
+      "default": "./dist/pocketbase.js"
     }
   },
   "main": "./dist/main.cjs",
-  "module": "./dist/main.module.js",
-  "unpkg": "./dist/main.umd.js",
+  "module": "./dist/main.js",
   "scripts": {
-    "build": "microbundle src/*.ts --generateTypes",
-    "dev": "microbundle watch src/*.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
-  "files": ["dist", "readme"],
+  "files": [
+    "dist",
+    "readme"
+  ],
   "keywords": [
     "solid-js",
     "validation",
@@ -53,8 +57,18 @@
   },
   "homepage": "https://github.com/odama626/solid-validation#readme",
   "devDependencies": {
-    "microbundle": "^0.15.1",
-    "solid-js": "^1.9.4"
+    "@solidjs/testing-library": "^0.8.10",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@typescript/typescript6": "^6.0.2",
+    "@vitest/coverage-v8": "^5.0.0",
+    "jsdom": "^30.0.1",
+    "solid-js": "^1.9.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.1.0",
+    "vite-plugin-solid": "^2.11.14",
+    "vitest": "^5.0.0"
   },
   "peerDependencies": {
     "solid-js": "^1.9.4"
