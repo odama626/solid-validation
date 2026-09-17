@@ -1,14 +1,14 @@
 packages:
-  - docs
-  - docs/demos
+  - docs/v1
+  - docs/v2
 
 allowBuilds:
   esbuild: true
   sharp: true
   '@parcel/watcher': true
 
-# The docs shell runs Solid 2; docs/demos runs Solid 1 so it can host the
-# current v1 library in an iframe. Only the shell's tree is pinned.
+# Each documentation version is a standalone site with its own Solid. v1 is
+# Astro on Solid 1 and documents the 1.x library; v2 is Solid 2.
 overrides:
   '@kobalte/core>solid-js': 2.0.0-rc.8
   '@kobalte/core>@solidjs/web': 2.0.0-rc.8
