@@ -1,19 +1,15 @@
-/* Typography, plus a bridge so Starlight's chrome uses the same palette daisyUI
-   gives the demos. Component colour now comes from daisyUI, not from here. */
+/* Typography, plus a bridge so Starlight's chrome uses the same palette
+   @sparkstone/css gives the content. Component colour comes from the classless
+   build, not from here. */
 :root {
   --sl-font: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
 
-  --sl-color-accent: var(--color-primary);
-  --sl-color-accent-low: color-mix(in oklch, var(--color-primary) 25%, var(--color-base-100));
-  --sl-color-accent-high: color-mix(in oklch, var(--color-primary) 70%, white);
+  --sl-color-accent: var(--primary-surface-lc);
+  --sl-color-accent-low: var(--surface-lc-2);
+  --sl-color-accent-high: var(--primary-text-lc);
 }
 
-:root[data-theme='light'] {
-  --sl-color-accent-high: color-mix(in oklch, var(--color-primary) 80%, black);
-}
-
-/* Inter runs loose at display sizes. */
 .sl-markdown-content h1,
 .sl-markdown-content h2,
 .sl-markdown-content h3 {

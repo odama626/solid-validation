@@ -120,7 +120,7 @@ Returns a ref-compatible function that registers an element. The value form of `
 <input name='email' required ref={validateRef(isCorporateAddress)} />
 ```
 
-See [Child components](/solid-validation/guides/child-components/).
+See [Child components](/v1/guides/child-components/).
 
 ---
 

@@ -1,12 +1,13 @@
-/* The iframe is only ever a single demo, so trim the page chrome around it. */
-body {
-  margin: 0;
-  padding: 0.25rem;
-  background: transparent;
+/* Demos are inline islands on the page, so they only need the error slot and a
+   row for their buttons. Everything else is the classless theme. */
+.docs-error {
+  display: block;
+  min-height: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--error-color);
 }
 
-form > footer,
-.demo-actions {
+form > footer {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -14,11 +15,4 @@ form > footer,
   padding: 0;
   border: 0;
   background: none;
-}
-
-.docs-error {
-  display: block;
-  min-height: 1.25rem;
-  color: var(--del-color, crimson);
-  font-size: 0.875rem;
 }

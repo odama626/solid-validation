@@ -1,21 +1,11 @@
 ---
 title: solid-validation
 description: Form validation for Solid.js that builds on the browser's own constraint validation.
-template: splash
-hero:
-  tagline: The browser already knows this field is invalid. This library puts that in a store you can render.
-  actions:
-    - text: Quick start
-      link: /solid-validation/quick-start/
-      icon: right-arrow
-      variant: primary
-    - text: Source
-      link: https://github.com/odama626/solid-validation
-      icon: external
-      variant: minimal
 ---
 
 import BasicFormDemo from '../../components/BasicFormDemo.tsx';
+
+The browser already knows this field is invalid. This library puts that in a store you can render.
 
 <BasicFormDemo client:load />
 
@@ -44,3 +34,5 @@ There is no schema to declare and no field registry to keep in sync. A field joi
 It does not manage your values. There is no `values` store and no controlled-input wrapper. Read values with `FormData` on submit, or with your own signals. The library only owns error state.
 
 It also does not validate on every keystroke. Errors appear on blur and on submit, and clear on the next input into a field that is already showing one.
+
+Ready to use it? Start with the [quick start](/v1/quick-start/).
