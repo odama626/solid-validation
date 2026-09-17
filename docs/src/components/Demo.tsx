@@ -1,3 +1,4 @@
+import { isServer } from '@solidjs/web';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
 
 /**
@@ -11,7 +12,7 @@ export default function Demo(props: { name: string; title: string }) {
   let frame: HTMLIFrameElement | undefined;
 
   const scheme = () => {
-    if (typeof window === 'undefined') return 'light';
+    if (isServer) return 'light';
     return (
       document.documentElement.getAttribute('data-color-scheme') ??
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
@@ -24,9 +25,12 @@ export default function Demo(props: { name: string; title: string }) {
       '*',
     );
 
-  // Solid 2 dropped onMount; a client effect is the equivalent hook point.
-  createEffect(() => {
-    if (typeof window === 'undefined') return;
+  // Solid 2 dropped onMount, and its createEffect takes a compute function
+  // plus an effect function. Effects also run during SSR, hence the guard.
+  if (!isServer)
+    createEffect(
+      () => undefined,
+      () => {
     const onMessage = (event: MessageEvent) => {
       const data = event.data;
       if (data?.type !== 'solid-validation-demo-height') return;
@@ -46,7 +50,8 @@ export default function Demo(props: { name: string; title: string }) {
       window.removeEventListener('message', onMessage);
       observer.disconnect();
     });
-  });
+      },
+    );
 
   return (
     <iframe

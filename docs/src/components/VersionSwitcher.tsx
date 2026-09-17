@@ -1,5 +1,7 @@
 import { Select } from '@kobalte/core/select';
 import { useLocation } from '@solidjs/router';
+import { Show, createEffect, createSignal } from 'solid-js';
+import { isServer } from '@solidjs/web';
 
 type Version = { label: string; value: string; path: string; frozen?: boolean };
 
@@ -18,10 +20,19 @@ const base = import.meta.env.BASE_URL;
 export default function VersionSwitcher() {
   const location = useLocation();
 
+  // Kobalte's Select does not hydrate cleanly: its generated ids and portal
+  // content differ between the server and client render, and the mismatch
+  // halts the reactive system. Render it only after mount.
+  const [mounted, setMounted] = createSignal(false);
+  // Solid 2's createEffect takes a compute function and an effect function.
+  // The compute is constant here, so the effect runs once, after hydration.
+  if (!isServer) createEffect(() => undefined, () => setMounted(true));
+
   const current = () =>
     versions.find(v => location.pathname.startsWith(`${base}${v.path}`)) ?? versions[0];
 
   return (
+    <Show when={mounted()} fallback={<span class='docs-version-placeholder'>{current().label}</span>}>
     <Select<Version>
       options={versions}
       optionValue='value'
@@ -45,5 +56,6 @@ export default function VersionSwitcher() {
         </Select.Content>
       </Select.Portal>
     </Select>
+    </Show>
   );
 }
