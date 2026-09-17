@@ -29,7 +29,10 @@ const nested = fileURLToPath(new URL(`../versions/${id}/dist`, import.meta.url))
 await mkdir(dist, { recursive: true });
 
 if (existsSync(merged)) {
+  // Hashed filenames change on every content edit, so a plain copy would leave
+  // the previous build's assets behind. Clear what this version owns first.
   await rm(`${dist}/${id}`, { recursive: true, force: true });
+  await rm(`${dist}/assets`, { recursive: true, force: true });
   await cp(merged, dist, {
     recursive: true,
     filter: src => {
