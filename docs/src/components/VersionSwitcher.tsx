@@ -29,7 +29,11 @@ export default function VersionSwitcher() {
   // does not run during SSR, which is what keeps `mounted` false there.
   createEffect(
     () => undefined,
-    () => setMounted(true),
+    () => {
+      // Braces matter: Solid 2 setters return the new value, and an effect
+      // callback may only return a cleanup function or undefined.
+      setMounted(true);
+    },
   );
 
   const current = () =>

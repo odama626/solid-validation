@@ -1,5 +1,5 @@
 import { isServer } from '@solidjs/web';
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 
 /**
  * Live demos run the v1 library, which is Solid 1. The docs shell is Solid 2,
@@ -30,25 +30,26 @@ export default function Demo(props: { name: string; title: string }) {
   createEffect(
     () => undefined,
     () => {
-    const onMessage = (event: MessageEvent) => {
-      const data = event.data;
-      if (data?.type !== 'solid-validation-demo-height') return;
-      if (data.name !== props.name) return;
-      setHeight(data.height);
-    };
-    window.addEventListener('message', onMessage);
+      const onMessage = (event: MessageEvent) => {
+        const data = event.data;
+        if (data?.type !== 'solid-validation-demo-height') return;
+        if (data.name !== props.name) return;
+        setHeight(data.height);
+      };
+      window.addEventListener('message', onMessage);
 
-    // Mirror the shell's light/dark choice into the frame when it changes.
-    const observer = new MutationObserver(pushScheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-color-scheme'],
-    });
+      // Mirror the shell's light/dark choice into the frame when it changes.
+      const observer = new MutationObserver(pushScheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-color-scheme'],
+      });
 
-    onCleanup(() => {
-      window.removeEventListener('message', onMessage);
-      observer.disconnect();
-    });
+      // Solid 2 takes the cleanup as the effect's return value.
+      return () => {
+        window.removeEventListener('message', onMessage);
+        observer.disconnect();
+      };
     },
   );
 
