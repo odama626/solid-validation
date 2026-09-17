@@ -1,6 +1,6 @@
 import { announceRoutes } from '@solidjs/prerender';
 import { Title } from '@solidjs/meta';
-import { Loading } from 'solid-js';
+import { Loading, createErrorBoundary } from 'solid-js';
 import Sidebar from './components/Sidebar';
 import VersionSwitcher from './components/VersionSwitcher';
 import { Router } from './router';
@@ -31,7 +31,16 @@ export default function App() {
           <div class='docs-shell'>
             <Sidebar />
             <main class='docs-main'>
-              <Loading fallback={<p>Loading…</p>}>{props.children}</Loading>
+              {createErrorBoundary(
+                () => <Loading fallback={<p>Loading…</p>}>{props.children}</Loading>,
+                (error, reset) => (
+                  <div role='alert'>
+                    <h1>Something broke on this page</h1>
+                    <p>{String(error)}</p>
+                    <button onClick={reset}>Try again</button>
+                  </div>
+                ),
+              )()}
             </main>
           </div>
         </>

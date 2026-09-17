@@ -25,12 +25,11 @@ export default function Demo(props: { name: string; title: string }) {
       '*',
     );
 
-  // Solid 2 dropped onMount, and its createEffect takes a compute function
-  // plus an effect function. Effects also run during SSR, hence the guard.
-  if (!isServer)
-    createEffect(
-      () => undefined,
-      () => {
+  // Unconditional for the same reason as VersionSwitcher: an isServer branch
+  // around a reactive node desynchronises the hydration key namespace.
+  createEffect(
+    () => undefined,
+    () => {
     const onMessage = (event: MessageEvent) => {
       const data = event.data;
       if (data?.type !== 'solid-validation-demo-height') return;
@@ -50,8 +49,8 @@ export default function Demo(props: { name: string; title: string }) {
       window.removeEventListener('message', onMessage);
       observer.disconnect();
     });
-      },
-    );
+    },
+  );
 
   return (
     <iframe
