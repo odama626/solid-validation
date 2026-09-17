@@ -1,8 +1,32 @@
-/* Demos are inline islands on the page, so they only need the error slot and a
-   row for their buttons. Everything else is the classless theme. */
+/*
+ * Demos are the product on a form-validation site, so they get a frame that
+ * reads as "this is live", not as page furniture. Colour is built from the
+ * @sparkstone/css base hue rather than hardcoded.
+ */
+.sl-markdown-content astro-island form,
+.sl-markdown-content astro-island > div {
+  display: block;
+  margin-block: 1.75rem;
+  padding: 1.5rem;
+  border: 1px solid oklch(from var(--color) var(--surface-lc-3) h);
+  border-radius: 0.5rem;
+  background: oklch(from var(--color) var(--surface-lc-2) h);
+}
+
+.sl-markdown-content astro-island label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.sl-markdown-content astro-island :is(input, select, textarea) {
+  width: 100%;
+}
+
 .docs-error {
   display: block;
   min-height: 1.25rem;
+  margin-bottom: 0.75rem;
   font-size: 0.875rem;
   color: var(--error-color);
 }
@@ -12,7 +36,13 @@ form > footer {
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
   padding: 0;
   border: 0;
   background: none;
+}
+
+/* The one place a failing field is announced visually. */
+[aria-invalid='true'] {
+  border-color: var(--error-color);
 }

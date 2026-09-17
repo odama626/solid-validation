@@ -1,22 +1,30 @@
-/* Typography, plus a bridge so Starlight's chrome uses the same palette
-   @sparkstone/css gives the content. Component colour comes from the classless
-   build, not from here. */
+/*
+ * @sparkstone/css exposes lightness-contrast percentages, not colours. A colour
+ * is built from the base hue with oklch relative syntax:
+ *     oklch(from var(--color) var(--surface-lc-2) h)
+ * Using the -lc variables directly yields an invalid value, which is why this
+ * bridge previously did nothing.
+ */
 :root {
   --sl-font: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
 
-  --sl-color-accent: var(--primary-surface-lc);
-  --sl-color-accent-low: var(--surface-lc-2);
-  --sl-color-accent-high: var(--primary-text-lc);
+  --sl-color-accent: oklch(from var(--color) var(--primary-surface-lc) h);
+  --sl-color-accent-low: oklch(from var(--color) var(--surface-lc-2) h);
+  --sl-color-accent-high: oklch(from var(--color) var(--text-lc-1) h);
 }
 
-.sl-markdown-content h1,
-.sl-markdown-content h2,
-.sl-markdown-content h3 {
+.sl-markdown-content :is(h1, h2, h3) {
   letter-spacing: -0.018em;
 }
 
-.sl-markdown-content p,
-.sl-markdown-content li {
+.sl-markdown-content :is(p, li) {
   max-width: 68ch;
+}
+
+/* Section rules give the long reference pages some rhythm. */
+.sl-markdown-content h2 {
+  margin-top: 2.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid oklch(from var(--color) var(--surface-lc-3) h);
 }
