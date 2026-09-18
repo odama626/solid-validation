@@ -5,6 +5,13 @@ All notable changes to `@sparkstone/solid-validation` will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1]
+
+### Changed
+- Repository moved to the Sparkstone organisation; `repository`, `bugs` and `homepage` now point at `github.com/sparkstonepdx/solid-validation`. No code changes.
+
+---
+
 ## [1.6.0] - 2026-09-17
 ### Fixed
 - `clearErrors` now clears each field's error state, not just the store: a form reset or a successful submit previously left every field marked `aria-invalid="true"`, still carrying `errorClass`, and still failing `checkValidity()` from a stale custom validity message
@@ -20,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2026-05-06
 
 ### Fixed
-- `isSubmitting` now remains true until after `isSubmitted` has been updated ([371820c](https://github.com/odama626/solid-validation/commit/371820c))
+- `isSubmitting` now remains true until after `isSubmitted` has been updated ([371820c](https://github.com/sparkstonepdx/solid-validation/commit/371820c))
 
 ---
 

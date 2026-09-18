@@ -24,7 +24,7 @@ export default function App() {
             </p>
             <span class='docs-bar__spacer' />
             <VersionSwitcher />
-            <a href='https://github.com/odama626/solid-validation' class='secondary'>
+            <a href='https://github.com/sparkstonepdx/solid-validation' class='secondary'>
               GitHub
             </a>
           </header>
