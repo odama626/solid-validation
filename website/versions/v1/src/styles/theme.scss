@@ -1,0 +1,91 @@
+@use '@sparkstone/css/src/vars.scss' as *;
+
+/*
+ * Colour comes from the framework's Sass API. The -lc variables are
+ * (lightness, chroma) pairs into a nine-step scale, not colours, and
+ * cur-color() resolves a stop against whatever --color is in scope.
+ */
+:root {
+  --sl-font: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Starlight's chrome, bound to the same scale as the content. */
+:root,
+:root[data-theme='light'] {
+  --sl-color-accent: #{cur-color(var(--text-lc-4))};
+  --sl-color-accent-low: #{cur-color(var(--surface-lc-2))};
+  --sl-color-accent-high: #{cur-color(var(--text-lc-1))};
+
+  --sl-color-bg: #{cur-color(var(--surface-lc-1))};
+  --sl-color-bg-sidebar: #{cur-color(var(--surface-lc-2))};
+  --sl-color-bg-nav: #{cur-color(var(--surface-lc-1))};
+  --sl-color-bg-inline-code: #{cur-color(var(--surface-lc-2))};
+  --sl-color-hairline: #{get-border-color()};
+  --sl-color-hairline-light: #{get-border-color()};
+  --sl-color-hairline-shade: #{get-border-color()};
+
+  --sl-color-text: #{cur-color(var(--text-lc-1))};
+  --sl-color-text-accent: #{cur-color(var(--text-lc-4))};
+  --sl-color-white: #{cur-color(var(--text-lc-1))};
+  --sl-color-gray-1: #{cur-color(var(--text-lc-1))};
+  --sl-color-gray-2: #{cur-color(var(--text-lc-2))};
+  --sl-color-gray-3: #{cur-color(var(--text-lc-3))};
+  --sl-color-gray-4: #{cur-color(var(--surface-lc-4))};
+  --sl-color-gray-5: #{cur-color(var(--surface-lc-3))};
+  --sl-color-gray-6: #{cur-color(var(--surface-lc-2))};
+  --sl-color-gray-7: #{cur-color(var(--surface-lc-2))};
+  --sl-color-black: #{cur-color(var(--surface-lc-1))};
+}
+
+.sl-markdown-content :is(h1, h2, h3) {
+  letter-spacing: -0.018em;
+}
+
+.sl-markdown-content :is(p, li) {
+  max-width: 68ch;
+}
+
+/* Section rules give the long reference pages some rhythm. */
+.sl-markdown-content h2 {
+  margin-top: 2.75rem;
+  padding-top: 1.25rem;
+  border-top: var(--border-width) solid get-border-color();
+}
+
+/*
+ * Starlight's search is a bare <dialog>, and the classless build styles bare
+ * dialogs as full-viewport flex-centred overlays. Starlight does not set those
+ * properties itself, so nothing unlayered competes and the layered rules take
+ * over its modal. These selectors are unlayered, so they win.
+ */
+site-search dialog {
+  display: revert;
+  position: revert;
+  inset: revert;
+  justify-content: revert;
+  align-items: revert;
+  min-height: revert;
+  backdrop-filter: revert;
+  z-index: revert;
+}
+
+site-search dialog > form {
+  width: revert;
+  max-height: revert;
+}
+
+site-search dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(4px);
+}
+
+site-search kbd {
+  padding: 0.1rem 0.35rem;
+  border: var(--border-width) solid get-border-color();
+  border-radius: var(--border-radius);
+  background: cur-color(var(--surface-lc-2));
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}

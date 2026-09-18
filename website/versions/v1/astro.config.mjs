@@ -27,9 +27,9 @@ export default defineConfig({
         '@fontsource-variable/inter',
         '@fontsource/ibm-plex-mono/400.css',
         '@fontsource/ibm-plex-mono/600.css',
-        './src/styles/demo.css',
+        './src/styles/demo.scss',
         '@sparkstone/css/classless',
-        './src/styles/theme.css',
+        './src/styles/theme.scss',
       ],
       sidebar: [
         { label: 'Quick start', link: '/quick-start/' },

@@ -1,16 +1,17 @@
+@use '@sparkstone/css/src/vars.scss' as *;
+
 /*
  * Demos are the product on a form-validation site, so they get a frame that
- * reads as "this is live", not as page furniture. Colour is built from the
- * @sparkstone/css base hue rather than hardcoded.
+ * reads as "this is live", not as page furniture.
  */
 .sl-markdown-content astro-island form,
 .sl-markdown-content astro-island > div {
   display: block;
   margin-block: 1.75rem;
   padding: 1.5rem;
-  border: 1px solid oklch(from var(--color) var(--surface-lc-3) h);
-  border-radius: 0.5rem;
-  background: oklch(from var(--color) var(--surface-lc-2) h);
+  border: var(--border-width) solid get-border-color();
+  border-radius: var(--border-radius);
+  background: cur-color(var(--surface-lc-2));
 }
 
 .sl-markdown-content astro-island label {
@@ -28,7 +29,7 @@
   min-height: 1.25rem;
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
-  color: var(--error-color);
+  color: get-color(var(--text-lc-4), var(--error-color));
 }
 
 form > footer {
@@ -42,7 +43,6 @@ form > footer {
   background: none;
 }
 
-/* The one place a failing field is announced visually. */
 [aria-invalid='true'] {
   border-color: var(--error-color);
 }
