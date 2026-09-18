@@ -5,13 +5,9 @@ All notable changes to `@sparkstone/solid-validation` will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.6.0] - 2026-09-17
 ### Fixed
 - `clearErrors` now clears each field's error state, not just the store: a form reset or a successful submit previously left every field marked `aria-invalid="true"`, still carrying `errorClass`, and still failing `checkValidity()` from a stale custom validity message
-
----
-
-## [1.5.3] - 2026-09-09
 - onBlur validation now actually works
 - added test coverage and documentation in preparation for solidv2 migration
 
