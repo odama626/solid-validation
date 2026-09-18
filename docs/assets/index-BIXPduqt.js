@@ -1,4 +1,4 @@
-import{H as e}from"./dist-B5qRkI56.js";import{t}from"./MarkdownPage-BdwPW9Ld.js";var n=`---
+import{H as e}from"./dist-B5qRkI56.js";import{t}from"./MarkdownPage-UBS0bX0L.js";var n=`---
 title: solid-validation
 ---
 

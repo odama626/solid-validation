@@ -4,8 +4,8 @@ import versions from '../../../../versions.json';
 
 type Version = { id: string; label: string; path: string; prerelease?: boolean };
 
-const all = versions.versions as Version[];
 const here = 'v2';
+const compiled = versions.versions as Version[];
 
 /**
  * Each version is a standalone site, so switching is a full page navigation.
@@ -13,7 +13,11 @@ const here = 'v2';
  * reads, so adding a version is a one-file change.
  */
 export default function VersionSwitcher() {
-  const current = () => all.find(v => v.id === here) ?? all[0];
+  // Starts as the list this build was compiled with, then re-reads the
+  // published manifest so a version released later still appears here without
+  // rebuilding this site.
+  const [all, setAll] = createSignal<Version[]>(compiled);
+  const current = () => all().find(v => v.id === here) ?? all()[0];
   const [mounted, setMounted] = createSignal(false);
 
   // Kobalte does not hydrate cleanly, so it renders only after mount behind a
@@ -23,6 +27,10 @@ export default function VersionSwitcher() {
     () => undefined,
     () => {
       setMounted(true);
+      fetch(`${versions.root}versions.json`)
+        .then(response => (response.ok ? response.json() : null))
+        .then(data => data?.versions?.length && setAll(data.versions))
+        .catch(() => {});
     },
   );
 
@@ -31,7 +39,7 @@ export default function VersionSwitcher() {
       when={mounted()}
       fallback={<span class='docs-version-placeholder'>{current().label}</span>}>
       <Select<Version>
-        options={all}
+        options={all()}
         optionValue='id'
         optionTextValue='label'
         value={current()}

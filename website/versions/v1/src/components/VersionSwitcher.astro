@@ -1,13 +1,18 @@
 ---
 import versions from '../../../../versions.json';
 
-const { current, versions: all } = versions;
+const { root, current, versions: all } = versions;
 const here = 'v1';
 ---
 
 <label class="version-switcher">
   <span class="sr-only">Documentation version</span>
-  <select onchange="if (this.value) window.location.href = this.value">
+  <select
+    data-version-switcher
+    data-here={here}
+    data-manifest={`${root}versions.json`}
+    onchange="if (this.value) window.location.href = this.value"
+  >
     {
       all.map(v => (
         <option value={v.path} selected={v.id === here}>
@@ -18,6 +23,32 @@ const here = 'v1';
     }
   </select>
 </label>
+
+<script>
+  // The options above are the list this build was compiled with. Re-read the
+  // published manifest so a version released after this build still appears,
+  // without having to rebuild a frozen site.
+  const select = document.querySelector('select[data-version-switcher]');
+  if (select) {
+    const { here, manifest } = select.dataset;
+    fetch(manifest)
+      .then(response => (response.ok ? response.json() : null))
+      .then(data => {
+        if (!data?.versions?.length) return;
+        select.replaceChildren(
+          ...data.versions.map(version => {
+            const option = new Option(
+              version.label + (version.id === data.current ? ' \u00b7 current' : ''),
+              version.path,
+            );
+            option.selected = version.id === here;
+            return option;
+          }),
+        );
+      })
+      .catch(() => {});
+  }
+</script>
 
 <style>
   .version-switcher select {

@@ -57,9 +57,23 @@ pnpm build:all         # every version
 A version whose `source` is `workspace` triggers a library build first, since
 its demos resolve the package entry. A version pinned to npm does not.
 
+## How the switcher stays current
+
+Each site compiles the version list it was built with, then re-reads
+`versions.json` from the deploy root at runtime and replaces its options. That
+is what lets a frozen build offer a version released after it, with no rebuild.
+The compiled list is the fallback when the fetch fails or JS is off.
+
+`root` in `versions.json` is the deploy prefix and is how each site finds the
+published manifest, since the sites sit at different depths.
+
+A version may be listed before its site exists: the build skips any id with no
+`versions/<id>` directory and warns, so the entry can go in first and the
+switchers start offering it once the site is built.
+
 ## Adding a version
 
-1. Copy the previous version's directory to `docs/versions/<id>`.
+1. Copy the previous version's directory to `website/versions/<id>`.
 2. Pin the previous version to its npm major, as above.
 3. Add an entry to `versions.json` and set `current` if it is now the default.
 4. Nothing to add to `docs/package.json`: the scripts read `versions.json`.

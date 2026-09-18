@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import versions from '../versions.json' with { type: 'json' };
 
@@ -41,4 +41,11 @@ ${all
 
 await mkdir(out, { recursive: true });
 await writeFile(new URL('index.html', `file://${out}`), html);
+
+// Served alongside the sites so every build, however old, can fetch the
+// current list of versions rather than the one it was compiled with.
+await copyFile(
+  fileURLToPath(new URL('../versions.json', import.meta.url)),
+  fileURLToPath(new URL('versions.json', `file://${out}`)),
+);
 console.log(`root index -> ${target.path}`);

@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import versions from '../versions.json' with { type: 'json' };
 
@@ -20,10 +21,26 @@ const args = process.argv.slice(2);
 const all = args.includes('--all');
 const named = args.filter(a => !a.startsWith('--'));
 
-const targets = all ? byNewest : named.length ? byNewest.filter(v => named.includes(v.id)) : [byNewest[0]];
+// A version can be listed in versions.json before its site exists, so that the
+// switchers start offering it. Skip those rather than failing the build.
+const built = byNewest.filter(v =>
+  existsSync(fileURLToPath(new URL(`../versions/${v.id}`, import.meta.url))),
+);
 
-if (!targets.length) {
-  throw new Error(`no such version: ${named.join(', ')}. Known: ${byNewest.map(v => v.id).join(', ')}`);
+for (const version of byNewest) {
+  if (!built.includes(version)) {
+    console.warn(`skipping ${version.id}: listed in versions.json but versions/${version.id} does not exist`);
+  }
+}
+
+const targets = all
+  ? built
+  : named.length
+    ? built.filter(v => named.includes(v.id))
+    : built.slice(0, 1);
+
+if (!targets.length && named.length) {
+  throw new Error(`no buildable version named: ${named.join(', ')}. Built: ${built.map(v => v.id).join(', ')}`);
 }
 
 // A version tracking the workspace package needs the library built first; one
