@@ -1,0 +1,100 @@
+<!DOCTYPE html><html _hk=000 lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!--$--><script>window._$HY||(e=>{let t=e=>e&&e.hasAttribute&&(e.hasAttribute("_hk")?e:t(e.host&&e.host.nodeType?e.host:e.parentNode));["click","input"].forEach((o=>document.addEventListener(o,(o=>{if(!e.events)return;let s=t(o.composedPath&&o.composedPath()[0]||o.target);s&&!e.completed.has(s)&&e.events.push([s,o])}))))})(_$HY={events:[],completed:new WeakSet,r:{},fe(){}});</script><script>(self.$R=self.$R||{})[""]=[];_$HY.r["0010070b00_assets"]=($R[0]={"0010070b000031000":"/solid-validation/assets/use-form-DH4mUXjg.js"});_$HY.r["0010070b00_assets"]=($R[1]={"0010070b000031000":"/solid-validation/assets/use-form-DH4mUXjg.js"});_$HY.r["0010070b00_fr"]=$R[2]=($R[3]=($R[4]=() => {
+	const resolver = {
+		p: 0,
+		s: 0,
+		f: 0
+	};
+	resolver.p = new Promise((resolve, reject) => {
+		resolver.s = resolve;
+		resolver.f = reject;
+	});
+	return resolver;
+})()).p;($R[5]=(resolver, data) => {
+	resolver.s(data);
+	resolver.p.s = 1;
+	resolver.p.v = data;
+})($R[3],!0);</script><!--xs--><!--/--><title data-dh="title">useForm - solid-validation</title><link rel="stylesheet" href="/solid-validation/assets/virtual_solid-ssr-entry-client-B0qum1hI.css"><link rel="modulepreload" href="/solid-validation/assets/dist-B5qRkI56.js"><link rel="modulepreload" href="/solid-validation/assets/use-form-DH4mUXjg.js"><link rel="modulepreload" href="/solid-validation/assets/MarkdownPage-BdwPW9Ld.js"><link rel="modulepreload" href="/solid-validation/assets/virtual_solid-ssr-entry-client-C_brBEWc.js"><script type="module" src="/solid-validation/assets/virtual_solid-ssr-entry-client-C_brBEWc.js" async></script></head><body><header _hk=00100702 class="docs-bar"><p class="docs-bar__title"><a href="/" class="semantic">solid-validation</a></p><span class="docs-bar__spacer"></span><!--$--><span _hk=001007060 class="docs-version-placeholder">v2 (Solid 2)</span><!--/--><a href="https://github.com/sparkstonepdx/solid-validation" class="secondary">GitHub</a></header><div _hk=00100707 class="docs-shell"><!--$--><nav _hk=00100708 class="docs-nav" aria-label="Documentation"><h2 _hk=0010070900>Start here</h2><ul _hk=0010070901><li _hk=001007090200><a href="/solid-validation/v2">Overview</a></li><li _hk=001007090210><a href="/solid-validation/v2/quick-start">Quick start</a></li></ul><!--!$--><h2 _hk=0010070910>Guides</h2><ul _hk=0010070911><li _hk=001007091200><a href="/solid-validation/v2/guides/validators">Writing validators</a></li><li _hk=001007091210><a href="/solid-validation/v2/guides/server-errors">Server-side errors</a></li><li _hk=001007091220><a href="/solid-validation/v2/guides/outside-forms">Outside a form</a></li><li _hk=001007091230><a href="/solid-validation/v2/guides/child-components">Child components</a></li><li _hk=001007091240><a href="/solid-validation/v2/guides/pocketbase">PocketBase</a></li></ul><!--!$--><h2 _hk=0010070920>API</h2><ul _hk=0010070921><li _hk=001007092200><a href="/solid-validation/v2/api/use-form" aria-current="page">useForm</a></li><li _hk=001007092210><a href="/solid-validation/v2/api/types">Types</a></li></ul><!--!$--><h2 _hk=0010070930>Help</h2><ul _hk=0010070931><li _hk=001007093200><a href="/solid-validation/v2/troubleshooting">Troubleshooting</a></li></ul></nav><!--/--><main class="docs-main"><!--!$--><h1 _hk=0010070b00003100021>useForm</h1><div _hk=0010070b000031000300><pre><code class="language-ts">function useForm&lt;ErrorFields extends Object&gt;(options?: { errorClass?: string }): FormApi;
+</code></pre>
+<p>Creates an isolated form context: one error store, one field registry, one pair of submission signals. Call it once per form.</p>
+<p>The <code>ErrorFields</code> type parameter names the keys of the <code>errors</code> store. It is optional, and without it <code>errors</code> is loosely typed.</p>
+<pre><code class="language-ts">type Fields = { email: string; password: string };
+const { errors } = useForm&lt;Fields&gt;();
+</code></pre>
+<h3>options.errorClass</h3>
+<p>A class name toggled on any element that fails validation, alongside <code>aria-invalid=&quot;true&quot;</code>. Removed on the next input into that field. Omit it to style against <code>aria-invalid</code> only.</p>
+<hr>
+<h2>validate</h2>
+<pre><code class="language-ts">validate(ref: HTMLElement, accessor?: () =&gt; Validator[] | Falsy): void
+</code></pre>
+<p>Registers an element, used as a directive.</p>
+<pre><code class="language-tsx">&lt;input name='email' required use:validate /&gt;
+&lt;input name='handle' use:validate={[minLength(3)]} /&gt;
+</code></pre>
+<p>Registration is deferred to a microtask, so a field is not queryable in the same synchronous tick it renders in. Attaches <code>blur</code> and <code>input</code> handlers by assigning <code>onblur</code> and <code>oninput</code>, which replaces any handler already assigned that way on the same element.</p>
+<p>The store key comes from <code>name</code>, falling back to <code>data-name</code>.</p>
+<hr>
+<h2>formSubmit</h2>
+<pre><code class="language-ts">formSubmit(ref: HTMLFormElement, accessor: () =&gt; OnFormSubmit): void
+</code></pre>
+<p>Takes over a form's submit event, used as a directive.</p>
+<pre><code class="language-tsx">&lt;form use:formSubmit={onSubmit}&gt;
+</code></pre>
+<p>On attach it sets <code>novalidate</code> on the form. On submit it calls <code>preventDefault()</code> and runs the same sequence as <code>submit</code>, passing the form element to your callback. On reset it clears every error.</p>
+<hr>
+<h2>submit</h2>
+<pre><code class="language-ts">submit&lt;Payload&gt;(
+  callback: (payload: Payload) =&gt; MaybePromise&lt;void | Partial&lt;ErrorFields&gt;&gt;,
+  payload?: Payload,
+): Promise&lt;void&gt;
+</code></pre>
+<p>Runs validation and, if everything passes, the callback. Use it when there is no form element.</p>
+<ol>
+<li>Every registered field is checked in registration order.</li>
+<li>The first failing field still in the document is focused and scrolled into view, and the submission stops.</li>
+<li>Failing fields that have been removed from the document are dropped from the registry rather than blocking.</li>
+<li><code>isSubmitting</code> becomes <code>true</code>, the callback runs, <code>isSubmitting</code> becomes <code>false</code>.</li>
+<li>A returned object is merged into <code>errors</code>. Anything else clears all errors and sets <code>isSubmitted</code>.</li>
+</ol>
+<p>An exception thrown by the callback propagates and leaves <code>isSubmitting</code> at <code>true</code>. Catch inside the callback.</p>
+<hr>
+<h2>errors</h2>
+<pre><code class="language-ts">errors: Partial&lt;ErrorFields&gt;
+</code></pre>
+<p>A Solid store proxy of current messages, keyed by field name. Reading <code>errors.email</code> in JSX subscribes to that key alone. Keys that match no registered field are allowed and are how form-level messages are rendered.</p>
+<hr>
+<h2>isSubmitting</h2>
+<pre><code class="language-ts">isSubmitting: () =&gt; boolean
+</code></pre>
+<p><code>true</code> from the moment validation passes until the callback settles. Field checks that fail before the callback runs never flip it, so it does not flash on a failed submit.</p>
+<hr>
+<h2>isSubmitted</h2>
+<pre><code class="language-ts">isSubmitted: () =&gt; boolean
+</code></pre>
+<p><code>true</code> after a submission whose callback returned no errors. Reset to <code>false</code> by any input into a registered field, by the next submit, and when <code>formSubmit</code> attaches.</p>
+<hr>
+<h2>validateRef</h2>
+<pre><code class="language-ts">validateRef(...validators: Validator[]): (ref: HTMLElement) =&gt; void
+</code></pre>
+<p>Returns a ref-compatible function that registers an element. The value form of <code>use:validate</code>, for fields inside child components. Validators are passed as arguments rather than as an array.</p>
+<pre><code class="language-tsx">&lt;input name='email' required ref={validateRef(isCorporateAddress)} /&gt;
+</code></pre>
+<p>See <a href="/v1/guides/child-components/">Child components</a>.</p>
+<hr>
+<h2>validateField</h2>
+<pre><code class="language-ts">validateField(fieldName: keyof ErrorFields): Promise&lt;boolean&gt;
+</code></pre>
+<p>Checks one field and resolves to whether it passed. Focuses and scrolls to the element on failure. Returns <code>false</code> for a field that was never registered, so a typo in the name reads as invalid rather than throwing.</p>
+<p>Useful for multi-step forms, where a step is gated on a subset of fields:</p>
+<pre><code class="language-ts">if (!(await validateField('email'))) return;
+goToStep(2);
+</code></pre>
+<hr>
+<h2>getFieldValue</h2>
+<pre><code class="language-ts">getFieldValue(fieldName: keyof ErrorFields): string | undefined
+</code></pre>
+<p>Reads the current <code>value</code> of a registered field's element. Returns <code>undefined</code> for an unregistered field, and for elements with no <code>value</code> property such as a <code>div</code>.</p>
+<p>This is a direct DOM read, not a reactive source. It does not track in an effect or memo. For cross-field rules, read the other element inside a validator instead:</p>
+<pre><code class="language-ts">const mustMatch: Validator&lt;HTMLInputElement&gt; = el =&gt;
+  el.value !== getFieldValue('password') &amp;&amp; 'Passwords do not match';
+</code></pre>
+</div></main></div></body></html>

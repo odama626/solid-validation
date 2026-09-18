@@ -1,0 +1,51 @@
+<!DOCTYPE html><html _hk=000 lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!--$--><script>window._$HY||(e=>{let t=e=>e&&e.hasAttribute&&(e.hasAttribute("_hk")?e:t(e.host&&e.host.nodeType?e.host:e.parentNode));["click","input"].forEach((o=>document.addEventListener(o,(o=>{if(!e.events)return;let s=t(o.composedPath&&o.composedPath()[0]||o.target);s&&!e.completed.has(s)&&e.events.push([s,o])}))))})(_$HY={events:[],completed:new WeakSet,r:{},fe(){}});</script><script>(self.$R=self.$R||{})[""]=[];_$HY.r["0010070b00_assets"]=($R[0]={"0010070b000031000":"/solid-validation/assets/validators-UybUFg0H.js"});_$HY.r["0010070b00_assets"]=($R[1]={"0010070b000031000":"/solid-validation/assets/validators-UybUFg0H.js"});_$HY.r["0010070b00_fr"]=$R[2]=($R[3]=($R[4]=() => {
+	const resolver = {
+		p: 0,
+		s: 0,
+		f: 0
+	};
+	resolver.p = new Promise((resolve, reject) => {
+		resolver.s = resolve;
+		resolver.f = reject;
+	});
+	return resolver;
+})()).p;($R[5]=(resolver, data) => {
+	resolver.s(data);
+	resolver.p.s = 1;
+	resolver.p.v = data;
+})($R[3],!0);</script><!--xs--><!--/--><title data-dh="title">Writing validators - solid-validation</title><link rel="stylesheet" href="/solid-validation/assets/virtual_solid-ssr-entry-client-B0qum1hI.css"><link rel="modulepreload" href="/solid-validation/assets/dist-B5qRkI56.js"><link rel="modulepreload" href="/solid-validation/assets/validators-UybUFg0H.js"><link rel="modulepreload" href="/solid-validation/assets/MarkdownPage-BdwPW9Ld.js"><link rel="modulepreload" href="/solid-validation/assets/virtual_solid-ssr-entry-client-C_brBEWc.js"><script type="module" src="/solid-validation/assets/virtual_solid-ssr-entry-client-C_brBEWc.js" async></script></head><body><header _hk=00100702 class="docs-bar"><p class="docs-bar__title"><a href="/" class="semantic">solid-validation</a></p><span class="docs-bar__spacer"></span><!--$--><span _hk=001007060 class="docs-version-placeholder">v2 (Solid 2)</span><!--/--><a href="https://github.com/sparkstonepdx/solid-validation" class="secondary">GitHub</a></header><div _hk=00100707 class="docs-shell"><!--$--><nav _hk=00100708 class="docs-nav" aria-label="Documentation"><h2 _hk=0010070900>Start here</h2><ul _hk=0010070901><li _hk=001007090200><a href="/solid-validation/v2">Overview</a></li><li _hk=001007090210><a href="/solid-validation/v2/quick-start">Quick start</a></li></ul><!--!$--><h2 _hk=0010070910>Guides</h2><ul _hk=0010070911><li _hk=001007091200><a href="/solid-validation/v2/guides/validators" aria-current="page">Writing validators</a></li><li _hk=001007091210><a href="/solid-validation/v2/guides/server-errors">Server-side errors</a></li><li _hk=001007091220><a href="/solid-validation/v2/guides/outside-forms">Outside a form</a></li><li _hk=001007091230><a href="/solid-validation/v2/guides/child-components">Child components</a></li><li _hk=001007091240><a href="/solid-validation/v2/guides/pocketbase">PocketBase</a></li></ul><!--!$--><h2 _hk=0010070920>API</h2><ul _hk=0010070921><li _hk=001007092200><a href="/solid-validation/v2/api/use-form">useForm</a></li><li _hk=001007092210><a href="/solid-validation/v2/api/types">Types</a></li></ul><!--!$--><h2 _hk=0010070930>Help</h2><ul _hk=0010070931><li _hk=001007093200><a href="/solid-validation/v2/troubleshooting">Troubleshooting</a></li></ul></nav><!--/--><main class="docs-main"><!--!$--><h1 _hk=0010070b00003100021>Writing validators</h1><div _hk=0010070b000031000300><p>A validator is a function that takes the element and returns a message when something is wrong:</p>
+<pre><code class="language-ts">
+const minLength =
+  (min: number): Validator&lt;HTMLInputElement&gt; =&gt;
+  el =&gt;
+    el.value.length &lt; min &amp;&amp; `Use at least ${min} characters`;
+</code></pre>
+<p>Return a string to fail. Return anything falsy to pass, which includes <code>undefined</code>, <code>null</code>, <code>false</code>, <code>0</code> and <code>''</code>. That is why <code>el.value.length &lt; min &amp;&amp; message</code> works directly: the passing branch is <code>false</code>.</p>
+<h2>Order matters</h2>
+<p>Validators run in array order and stop at the first failure. Put the cheap checks first:</p>
+<pre><code class="language-tsx">&lt;input use:validate={[minLength(3), isUsernameAvailable]} /&gt;
+</code></pre>
+<p>Native constraints are checked before any of your validators. An empty <code>required</code> field never reaches your code, so you do not need to handle the empty case yourself.</p>
+<h2>Async validators</h2>
+<p>A validator may return a promise. It is awaited before the next one runs, so a slow check never races a fast one.</p>
+<pre><code class="language-ts">const isUsernameAvailable: Validator&lt;HTMLInputElement&gt; = async el =&gt; {
+  const { taken } = await api.checkUsername(el.value);
+  return taken ? `${el.value} is already taken` : undefined;
+};
+</code></pre>
+</div><aside _hk=0010070b000031000310 class="docs-demo-pending" role="note"><strong>A field validated by an async availability check</strong><p>Live demo pending the 2.x library release. See the same example running in the <a href="/solid-validation/v1/">v1 documentation</a>.</p></aside><div _hk=0010070b000031000320><p>There is no debounce built in. Since validators only run on blur and on submit, a field is checked once per visit rather than once per keystroke. If you need to throttle further, do it inside your own validator.</p>
+<h2>Conditional validators</h2>
+<p>Falsy entries in the array are skipped, so a rule can be switched off inline without building the array conditionally:</p>
+<pre><code class="language-tsx">&lt;input use:validate={[isRequired, needsConfirmation() &amp;&amp; mustMatchPassword]} /&gt;
+</code></pre>
+<h2>The message reaches the element too</h2>
+<p>When a validator fails, its message is passed to <code>element.setCustomValidity()</code>. The element's own <code>validationMessage</code> and <code>checkValidity()</code> then agree with what is in <code>errors</code>, which matters if anything else in your app reads native validity. The custom validity is cleared at the start of every check, so a stale message never carries forward.</p>
+<h2>Validating something other than an input</h2>
+<p>A validator receives whatever element it was attached to. On a <code>div</code>, <code>el.value</code> is undefined, so read from wherever your state actually lives:</p>
+<pre><code class="language-tsx">const [plan, setPlan] = createSignal&lt;string | null&gt;(null);
+const planChosen = () =&gt; !plan() &amp;&amp; 'Choose a plan to continue';
+
+&lt;div use:validate={[planChosen]} data-name='plan' /&gt;;
+</code></pre>
+<p>See <a href="/v1/guides/outside-forms/">Outside a form</a>.</p>
+</div></main></div></body></html>

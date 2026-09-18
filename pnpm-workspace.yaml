@@ -1,6 +1,6 @@
 packages:
   - .
-  - docs/versions/*
+  - website/versions/*
 
 allowBuilds:
   esbuild: true
