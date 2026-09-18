@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const src = path => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
-  site: 'https://odama626.github.io',
+  site: 'https://sparkstonepdx.github.io',
   base: '/v1',
   integrations: [
     solid(),
@@ -15,10 +15,10 @@ export default defineConfig({
       description:
         'Form validation for Solid.js that builds on the browser\u2019s own constraint validation.',
       social: {
-        github: 'https://github.com/odama626/solid-validation',
+        github: 'https://github.com/sparkstonepdx/solid-validation',
       },
       editLink: {
-        baseUrl: 'https://github.com/odama626/solid-validation/edit/main/docs/',
+        baseUrl: 'https://github.com/sparkstonepdx/solid-validation/edit/main/docs/',
       },
       components: {
         SocialIcons: './src/components/HeaderEnd.astro',
