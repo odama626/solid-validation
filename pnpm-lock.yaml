@@ -51,7 +51,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@26.5.0)(@vitest/coverage-v8@5.0.0)(jsdom@30.0.1)(vite@8.2.2(@types/node@26.5.0)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.104.1)(terser@5.51.2))
 
-  docs/versions/v1:
+  website/versions/v1:
     dependencies:
       '@astrojs/solid-js':
         specifier: ^5.0.0
@@ -84,7 +84,7 @@ importers:
         specifier: ^1.9.4
         version: 1.9.15
 
-  docs/versions/v2:
+  website/versions/v2:
     dependencies:
       '@kobalte/core':
         specifier: 2.0.0-alpha.2

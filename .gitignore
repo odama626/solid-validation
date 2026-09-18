@@ -2,3 +2,6 @@ node_modules
 dist
 coverage
 .astro
+
+# The built site is committed: github pages serves the repo's /docs folder.
+!/docs

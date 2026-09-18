@@ -1,0 +1,62 @@
+<!DOCTYPE html><html _hk=000 lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!--$--><script>window._$HY||(e=>{let t=e=>e&&e.hasAttribute&&(e.hasAttribute("_hk")?e:t(e.host&&e.host.nodeType?e.host:e.parentNode));["click","input"].forEach((o=>document.addEventListener(o,(o=>{if(!e.events)return;let s=t(o.composedPath&&o.composedPath()[0]||o.target);s&&!e.completed.has(s)&&e.events.push([s,o])}))))})(_$HY={events:[],completed:new WeakSet,r:{},fe(){}});</script><script>(self.$R=self.$R||{})[""]=[];_$HY.r["0010070b00_assets"]=($R[0]={"0010070b000031000":"/solid-validation/assets/pocketbase-X-m651hn.js"});_$HY.r["0010070b00_assets"]=($R[1]={"0010070b000031000":"/solid-validation/assets/pocketbase-X-m651hn.js"});_$HY.r["0010070b00_fr"]=$R[2]=($R[3]=($R[4]=() => {
+	const resolver = {
+		p: 0,
+		s: 0,
+		f: 0
+	};
+	resolver.p = new Promise((resolve, reject) => {
+		resolver.s = resolve;
+		resolver.f = reject;
+	});
+	return resolver;
+})()).p;($R[5]=(resolver, data) => {
+	resolver.s(data);
+	resolver.p.s = 1;
+	resolver.p.v = data;
+})($R[3],!0);</script><!--xs--><!--/--><title data-dh="title">PocketBase - solid-validation</title><link rel="stylesheet" href="/solid-validation/assets/virtual_solid-ssr-entry-client-B0qum1hI.css"><link rel="modulepreload" href="/solid-validation/assets/dist-B5qRkI56.js"><link rel="modulepreload" href="/solid-validation/assets/pocketbase-X-m651hn.js"><link rel="modulepreload" href="/solid-validation/assets/MarkdownPage-UBS0bX0L.js"><link rel="modulepreload" href="/solid-validation/assets/virtual_solid-ssr-entry-client-HYThFcuZ.js"><script type="module" src="/solid-validation/assets/virtual_solid-ssr-entry-client-HYThFcuZ.js" async></script></head><body><header _hk=00100702 class="docs-bar"><p class="docs-bar__title"><a href="/" class="semantic">solid-validation</a></p><span class="docs-bar__spacer"></span><!--$--><span _hk=001007060 class="docs-version-placeholder">v2 (Solid 2)</span><!--/--><a href="https://github.com/sparkstonepdx/solid-validation" class="secondary">GitHub</a></header><div _hk=00100707 class="docs-shell"><!--$--><nav _hk=00100708 class="docs-nav" aria-label="Documentation"><h2 _hk=0010070900>Start here</h2><ul _hk=0010070901><li _hk=001007090200><a href="/solid-validation/v2">Overview</a></li><li _hk=001007090210><a href="/solid-validation/v2/quick-start">Quick start</a></li></ul><!--!$--><h2 _hk=0010070910>Guides</h2><ul _hk=0010070911><li _hk=001007091200><a href="/solid-validation/v2/guides/validators">Writing validators</a></li><li _hk=001007091210><a href="/solid-validation/v2/guides/server-errors">Server-side errors</a></li><li _hk=001007091220><a href="/solid-validation/v2/guides/outside-forms">Outside a form</a></li><li _hk=001007091230><a href="/solid-validation/v2/guides/child-components">Child components</a></li><li _hk=001007091240><a href="/solid-validation/v2/guides/pocketbase" aria-current="page">PocketBase</a></li></ul><!--!$--><h2 _hk=0010070920>API</h2><ul _hk=0010070921><li _hk=001007092200><a href="/solid-validation/v2/api/use-form">useForm</a></li><li _hk=001007092210><a href="/solid-validation/v2/api/types">Types</a></li></ul><!--!$--><h2 _hk=0010070930>Help</h2><ul _hk=0010070931><li _hk=001007093200><a href="/solid-validation/v2/troubleshooting">Troubleshooting</a></li></ul></nav><!--/--><main class="docs-main"><!--!$--><h1 _hk=0010070b00003100021>PocketBase</h1><div _hk=0010070b000031000300><p>Two helpers ship from a separate entry point, so nothing PocketBase-related reaches your bundle unless you import it:</p>
+<pre><code class="language-ts">  parsePocketbaseError,
+  prepareFormDataForPocketbase,
+} from '@sparkstone/solid-validation/pocketbase';
+</code></pre>
+<h2>Field errors</h2>
+<p>PocketBase returns validation failures under <code>data.data</code>, keyed by field name. <code>parsePocketbaseError</code> flattens that into the shape the submit callback expects, so it can be returned directly:</p>
+<pre><code class="language-tsx">async function onSubmit(form: HTMLFormElement) {
+  try {
+    await pb.collection('users').create(new FormData(form));
+  } catch (error) {
+    return parsePocketbaseError(error);
+  }
+}
+</code></pre>
+<p>Given a PocketBase response like:</p>
+<pre><code class="language-json">{
+  &quot;message&quot;: &quot;Failed to create record.&quot;,
+  &quot;data&quot;: {
+    &quot;email&quot;: { &quot;code&quot;: &quot;validation_invalid_email&quot;, &quot;message&quot;: &quot;Must be a valid email address.&quot; },
+    &quot;password&quot;: { &quot;code&quot;: &quot;validation_length_out_of_range&quot;, &quot;message&quot;: &quot;Must be at least 8 characters.&quot; }
+  }
+}
+</code></pre>
+<p>you get:</p>
+<pre><code class="language-js">{
+  form: 'Failed to create record.',
+  email: 'Must be a valid email address.',
+  password: 'Must be at least 8 characters.',
+}
+</code></pre>
+<p>Field names match your input <code>name</code> attributes, so each message lands next to its field. The top-level message goes under <code>form</code>. Render it wherever your form-level errors go:</p>
+<pre><code class="language-tsx">&lt;span&gt;{errors.form}&lt;/span&gt;
+</code></pre>
+<p>Pass a second argument to use a different key:</p>
+<pre><code class="language-ts">return parsePocketbaseError(error, 'signupError');
+</code></pre>
+<p>An error with no <code>data.data</code> block, such as a network failure, yields only the root key. That is why the root key is always populated: there is always something to show.</p>
+<h2>Checkboxes</h2>
+<p>An unchecked checkbox is omitted from <code>FormData</code> entirely. PocketBase treats a missing boolean field as no change rather than as <code>false</code>, so unchecking a box does nothing. <code>prepareFormDataForPocketbase</code> writes an explicit <code>&quot;false&quot;</code> for every unchecked box in the form:</p>
+<pre><code class="language-tsx">async function onSubmit(form: HTMLFormElement) {
+  const formData = prepareFormDataForPocketbase(new FormData(form), form);
+  await pb.collection('users').update(id, formData);
+}
+</code></pre>
+<p>It mutates and returns the same <code>FormData</code> instance, and it only touches <code>input[type=&quot;checkbox&quot;]</code> elements inside the form you pass it.</p>
+</div></main></div></body></html>
