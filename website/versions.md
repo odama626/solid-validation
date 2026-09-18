@@ -35,6 +35,10 @@ every public path carries that prefix: astro's `base`, vite's `base`, the
 `path` of each entry in `versions.json`, and any cross-link written inside
 markdown, since astro does not rewrite those.
 
+The build writes a `.nojekyll` file into the output. Branch deploys run through
+Jekyll, which drops any path starting with an underscore, and astro emits its
+assets into `_astro/`. Without it the v1 site publishes with no styles.
+
 A Pages deploy replaces the whole site, so a partial build would delete the
 versions it did not build. Use `pnpm build:all` when producing what gets
 committed.
