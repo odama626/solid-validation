@@ -139,10 +139,6 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
   }
 
   function clearErrors() {
-    // The store is only half of the error state. Without this, a reset or a
-    // successful submit leaves every field still marked aria-invalid, still
-    // carrying errorClass, and still failing checkValidity from its stale
-    // custom validity message.
     for (const key in fields) {
       const element = fields[key]?.element;
       if (!element) continue;
