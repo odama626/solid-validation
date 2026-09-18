@@ -119,6 +119,49 @@ describe('clearing errors', () => {
     expect(username).toHaveAttribute('aria-invalid', 'false');
   });
 
+  it('clears the field error state on reset, not just the store', async () => {
+    render(() => <BasicForm errorClass='is-invalid' />);
+    await registered();
+
+    const username = screen.getByTestId('username') as HTMLInputElement;
+    const message = screen.getByTestId('message') as HTMLInputElement;
+
+    blur(username);
+    typeInto(message, 'abc');
+    blur(message);
+    await waitFor(() => expect(message.validationMessage).toBe('Must be at least 5 characters'));
+    expect(username).toHaveAttribute('aria-invalid', 'true');
+    expect(username).toHaveClass('is-invalid');
+
+    press(screen.getByTestId('reset'));
+
+    expect(username).toHaveAttribute('aria-invalid', 'false');
+    expect(username).not.toHaveClass('is-invalid');
+    expect(message).toHaveAttribute('aria-invalid', 'false');
+
+    // The custom validity is gone. `username` stays natively invalid because it
+    // is required and a reset empties it, which is the browser's own verdict,
+    // not stale state from the previous submit.
+    expect(message.validationMessage).toBe('');
+  });
+
+  it('clears the field error state after a successful submit', async () => {
+    render(() => <BasicForm errorClass='is-invalid' onSubmit={() => {}} />);
+    await registered();
+
+    const username = screen.getByTestId('username') as HTMLInputElement;
+    blur(username);
+    expect(username).toHaveAttribute('aria-invalid', 'true');
+
+    typeInto(username, 'ada');
+    typeInto(screen.getByTestId('message') as HTMLInputElement, 'long enough');
+    submitForm(screen.getByTestId('form') as HTMLFormElement);
+
+    await waitFor(() => expect(screen.getByTestId('submitted')).toHaveTextContent('yes'));
+    expect(username).toHaveAttribute('aria-invalid', 'false');
+    expect(username).not.toHaveClass('is-invalid');
+  });
+
   it('clears every error synchronously on form reset', async () => {
     render(() => <BasicForm />);
     await registered();
