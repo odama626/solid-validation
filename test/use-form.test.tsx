@@ -26,11 +26,11 @@ function BasicForm(props: {
   props.ready?.(api);
 
   return (
-    <form use:formSubmit={props.onSubmit ?? (() => {})} data-testid='form'>
-      <input type='text' name='username' required use:validate data-testid='username' />
+    <form ref={formSubmit(props.onSubmit ?? (() => {}))} data-testid='form'>
+      <input type='text' name='username' required ref={validate()} data-testid='username' />
       <span data-testid='error-username'>{errors.username}</span>
 
-      <input type='text' name='message' use:validate={[minLength(5)]} data-testid='message' />
+      <input type='text' name='message' ref={validate(() => [minLength(5)])} data-testid='message' />
       <span data-testid='error-message'>{errors.message}</span>
 
       <span data-testid='error-form'>{errors.formError}</span>

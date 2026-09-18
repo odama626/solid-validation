@@ -15,12 +15,13 @@ import { vi } from 'vitest';
  *    failure sits: one validator takes one turn, three take two. Never count
  *    them. Use `waitFor`, which polls until the assertion holds.
  *
- * Everything else is synchronous under Solid 1 and is asserted with no await at
- * all, on purpose. Native-constraint failures on blur, error clearing on input,
- * and clearing on form reset all land in the same tick as the event. Those bare
- * assertions are the canaries: if a Solid 2 scheduler defers store writes or DOM
- * updates, they fail immediately and name what changed, instead of being papered
- * over by a stray await.
+ * Under Solid 1 the rest was synchronous: a native-constraint failure on blur,
+ * error clearing on input, and clearing on form reset all landed in the same
+ * tick as the event, and were asserted with no await as canaries.
+ *
+ * Solid 2 defers store writes. Those canaries fired on the port, which is what
+ * they were for. Nothing observable is synchronous any more, so every assertion
+ * that follows an action goes through waitFor.
  *
  * The actions below are deliberately synchronous and return nothing. Awaiting
  * one would smuggle in a microtask and hide the thing the test is checking.

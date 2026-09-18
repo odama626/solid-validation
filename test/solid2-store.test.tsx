@@ -24,9 +24,9 @@ describe('key lifecycle', () => {
   function Keys(props: { onSubmit?: () => any }) {
     const { formSubmit, validate, errors } = useForm<Fields>();
     return (
-      <form use:formSubmit={props.onSubmit ?? (() => {})} data-testid='form'>
-        <input name='a' required use:validate data-testid='a' />
-        <input name='b' required use:validate data-testid='b' />
+      <form ref={formSubmit(props.onSubmit ?? (() => {}))} data-testid='form'>
+        <input name='a' required ref={validate()} data-testid='a' />
+        <input name='b' required ref={validate()} data-testid='b' />
         <span data-testid='keys'>{Object.keys(errors).join(',')}</span>
         <span data-testid='count'>{createMemo(() => Object.keys(errors).length)()}</span>
         <span data-testid='has-a'>{'a' in errors ? 'yes' : 'no'}</span>
@@ -126,8 +126,8 @@ describe('reactivity of keys that do not exist yet', () => {
     render(() => {
       const { formSubmit, validate, errors } = useForm<Fields>();
       return (
-        <form use:formSubmit={() => ({ form: 'Service unavailable' })} data-testid='form'>
-          <input name='a' use:validate data-testid='a' />
+        <form ref={formSubmit(() => ({ form: 'Service unavailable' }))} data-testid='form'>
+          <input name='a' ref={validate()} data-testid='a' />
           <span data-testid='error-form'>{errors.form}</span>
         </form>
       );
@@ -148,8 +148,8 @@ describe('reactivity of keys that do not exist yet', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input name='a' required use:validate data-testid='a' />
-          <input name='b' required use:validate data-testid='b' />
+          <input name='a' required ref={validate()} data-testid='a' />
+          <input name='b' required ref={validate()} data-testid='b' />
           <ul data-testid='list'>
             <For each={Object.keys(errors)}>{key => <li>{key}</li>}</For>
           </ul>
@@ -174,11 +174,11 @@ describe('write coalescing', () => {
 
     render(() => {
       const { validate, errors } = useForm<Fields>();
-      createEffect(() => {
-        errors.field;
-        runs();
-      });
-      return <input name='field' use:validate={[() => 'Same message']} data-testid='field' />;
+      createEffect(
+          () => errors.field,
+          () => runs(),
+        );
+      return <input name='field' ref={validate(() => [() => 'Same message'])} data-testid='field' />;
     });
     await registered();
     await waitFor(() => expect(runs).toHaveBeenCalledTimes(1));
@@ -198,11 +198,11 @@ describe('write coalescing', () => {
 
     render(() => {
       const { validate, errors } = useForm<Fields>();
-      createEffect(() => {
-        errors.field;
-        runs();
-      });
-      return <input name='field' use:validate={[() => message]} data-testid='field' />;
+      createEffect(
+          () => errors.field,
+          () => runs(),
+        );
+      return <input name='field' ref={validate(() => [() => message])} data-testid='field' />;
     });
     await registered();
     await waitFor(() => expect(runs).toHaveBeenCalledTimes(1));
@@ -229,7 +229,7 @@ describe('field names that stress the proxy', () => {
       const form = useForm<Fields>();
       errors = form.errors as Record<string, any>;
       const { validate } = form;
-      return <input name={fieldName} required use:validate data-testid='field' />;
+      return <input name={fieldName} required ref={validate()} data-testid='field' />;
     });
     return () => errors;
   }
@@ -242,7 +242,7 @@ describe('field names that stress the proxy', () => {
         const { validate, errors } = useForm<Fields>();
         return (
           <>
-            <input name={fieldName} required use:validate data-testid='field' />
+            <input name={fieldName} required ref={validate()} data-testid='field' />
             <span data-testid='error'>{errors[fieldName]}</span>
           </>
         );
@@ -299,7 +299,7 @@ describe('field names that stress the proxy', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input name='user.email' required use:validate data-testid='field' />
+          <input name='user.email' required ref={validate()} data-testid='field' />
           <span data-testid='keys'>{Object.keys(errors).join(',')}</span>
           <span data-testid='nested'>{(errors as any).user ? 'nested' : 'flat'}</span>
         </>
@@ -318,7 +318,7 @@ describe('field names that stress the proxy', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input required use:validate data-name='ignored' data-testid='field' />
+          <input required ref={validate()} data-name='ignored' data-testid='field' />
           <span data-testid='keys'>{Object.keys(errors).join('|')}</span>
         </>
       );
@@ -339,8 +339,8 @@ describe('server errors versus field errors', () => {
     render(() => {
       const { formSubmit, validate, errors } = useForm<Fields>();
       return (
-        <form use:formSubmit={() => ({ email: 'Already registered' })} data-testid='form'>
-          <input type='email' name='email' required use:validate data-testid='email' />
+        <form ref={formSubmit(() => ({ email: 'Already registered' }))} data-testid='form'>
+          <input type='email' name='email' required ref={validate()} data-testid='email' />
           <span data-testid='error'>{errors.email}</span>
         </form>
       );
@@ -359,8 +359,8 @@ describe('server errors versus field errors', () => {
     render(() => {
       const { formSubmit, validate, errors, isSubmitted } = useForm<Fields>();
       return (
-        <form use:formSubmit={() => ({})} data-testid='form'>
-          <input name='a' use:validate data-testid='a' />
+        <form ref={formSubmit(() => ({}))} data-testid='form'>
+          <input name='a' ref={validate()} data-testid='a' />
           <span data-testid='submitted'>{isSubmitted() ? 'yes' : 'no'}</span>
           <span data-testid='keys'>{Object.keys(errors).join(',')}</span>
         </form>

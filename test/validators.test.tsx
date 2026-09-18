@@ -9,7 +9,7 @@ function Field(props: { validators: Validator<HTMLInputElement>[] }) {
   const { validate, errors } = useForm<Fields>();
   return (
     <>
-      <input type='text' name='field' use:validate={props.validators} data-testid='field' />
+      <input type='text' name='field' ref={validate(() => props.validators)} data-testid='field' />
       <span data-testid='error'>{errors.field}</span>
     </>
   );
@@ -110,7 +110,7 @@ describe('native constraints', () => {
           type='email'
           name='field'
           required
-          use:validate={props.validators ?? []}
+          ref={validate(() => props.validators ?? [])}
           data-testid='field'
         />
         <span data-testid='error'>{errors.field}</span>

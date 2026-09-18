@@ -30,7 +30,7 @@ describe('registration deferral', () => {
     render(() => {
       api = useForm<Fields>();
       const { validate } = api;
-      return <input name='a' required use:validate data-testid='a' />;
+      return <input name='a' required ref={validate()} data-testid='a' />;
     });
 
     expect(api.getFieldValue('a')).toBeUndefined();
@@ -52,7 +52,7 @@ describe('registration deferral', () => {
       return (
         <>
           <Show when={visible()}>
-            <input name='late' required use:validate data-testid='late' />
+            <input name='late' required ref={validate()} data-testid='late' />
           </Show>
           <span data-testid='error'>{errors.late}</span>
         </>
@@ -75,7 +75,7 @@ describe('registration deferral', () => {
       return (
         <>
           <Show when={visible()}>
-            <input name='toggle' required use:validate data-testid='toggle' />
+            <input name='toggle' required ref={validate()} data-testid='toggle' />
           </Show>
           <span data-testid='error'>{errors.toggle}</span>
         </>
@@ -101,8 +101,8 @@ describe('registration deferral', () => {
       const { validate, errors, submit } = useForm<Fields>();
       return (
         <>
-          <input name='dup' required use:validate data-testid='first' />
-          <input name='dup' required use:validate data-testid='second' />
+          <input name='dup' required ref={validate()} data-testid='first' />
+          <input name='dup' required ref={validate()} data-testid='second' />
           <span data-testid='error'>{errors.dup}</span>
           <button data-testid='go' onClick={() => submit(() => {})}>
             Go
@@ -136,7 +136,7 @@ describe('validator depth', () => {
         const { validate, errors } = useForm<Fields>();
         return (
           <>
-            <input name='f' use:validate={pad(depth)} data-testid='f' />
+            <input name='f' ref={validate(() => pad(depth))} data-testid='f' />
             <span data-testid='error'>{errors.f}</span>
           </>
         );
@@ -180,7 +180,7 @@ describe('ownership and disposal', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input name='a' required use:validate data-testid='a' />
+          <input name='a' required ref={validate()} data-testid='a' />
           <span>{errors.a}</span>
         </>
       );
@@ -205,7 +205,7 @@ describe('ownership and disposal', () => {
       const { validate, errors, isSubmitted } = api;
       return (
         <>
-          <input name='a' use:validate data-testid='a' />
+          <input name='a' ref={validate()} data-testid='a' />
           <span>{errors.a}</span>
           <span>{isSubmitted() ? 'yes' : 'no'}</span>
         </>
@@ -237,7 +237,7 @@ describe('async ordering', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input name='f' use:validate={[slow]} data-testid='f' />
+          <input name='f' ref={validate(() => [slow])} data-testid='f' />
           <span data-testid='error'>{errors.f}</span>
         </>
       );
@@ -267,7 +267,7 @@ describe('async ordering', () => {
       const { validate, errors } = useForm<Fields>();
       return (
         <>
-          <input name='f' use:validate={[staggered]} data-testid='f' />
+          <input name='f' ref={validate(() => [staggered])} data-testid='f' />
           <span data-testid='error'>{errors.f}</span>
         </>
       );
@@ -292,11 +292,11 @@ describe('async ordering', () => {
       return (
         <input
           name='f'
-          use:validate={[
+          ref={validate(() => [
             () => {
               throw new Error('validator exploded');
             },
-          ]}
+          ])}
           data-testid='f'
         />
       );
@@ -316,10 +316,13 @@ describe('submission signals', () => {
 
     render(() => {
       const { formSubmit, validate, isSubmitting, isSubmitted } = useForm<Fields>();
-      createEffect(() => seen.push([isSubmitting(), isSubmitted()]));
+      createEffect(
+        () => [isSubmitting(), isSubmitted()] as [boolean, boolean],
+        pair => seen.push(pair),
+      );
       return (
-        <form use:formSubmit={() => pending.promise} data-testid='form'>
-          <input name='a' use:validate data-testid='a' />
+        <form ref={formSubmit(() => pending.promise)} data-testid='form'>
+          <input name='a' ref={validate()} data-testid='a' />
         </form>
       );
     });
@@ -341,10 +344,13 @@ describe('submission signals', () => {
 
     render(() => {
       const { formSubmit, validate, isSubmitting } = useForm<Fields>();
-      createEffect(() => seen.push(isSubmitting()));
+      createEffect(
+        () => isSubmitting(),
+        value => seen.push(value),
+      );
       return (
-        <form use:formSubmit={() => {}} data-testid='form'>
-          <input name='a' required use:validate data-testid='a' />
+        <form ref={formSubmit(() => {})} data-testid='form'>
+          <input name='a' required ref={validate()} data-testid='a' />
         </form>
       );
     });
@@ -366,7 +372,7 @@ describe('submission signals', () => {
     render(() => {
       api = useForm<Fields>();
       const { validate } = api;
-      return <input name='a' use:validate data-testid='a' />;
+      return <input name='a' ref={validate()} data-testid='a' />;
     });
     await registered();
 
