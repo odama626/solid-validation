@@ -42,6 +42,11 @@ ${all
 await mkdir(out, { recursive: true });
 await writeFile(new URL('index.html', `file://${out}`), html);
 
+// GitHub Pages branch deploys run the output through Jekyll, which drops every
+// path beginning with an underscore. Astro emits its assets into _astro/, so
+// without this the v1 site publishes with no CSS or JS at all.
+await writeFile(new URL('.nojekyll', `file://${out}`), '');
+
 // Served alongside the sites so every build, however old, can fetch the
 // current list of versions rather than the one it was compiled with.
 await copyFile(
