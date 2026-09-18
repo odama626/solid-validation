@@ -4,20 +4,20 @@ import { createStore, SetStoreFunction } from 'solid-js/store';
 type Falsy = false | 0 | '' | null | undefined | void;
 type MaybePromise<T> = T | Promise<T>;
 
+export type OnFormSubmitResult<T> = MaybePromise<void | Partial<ErrorFields>>;
+
 type ValidatorResponse = MaybePromise<string | Falsy>;
 
 export type Validator<Element> = Falsy | ((el: Element) => ValidatorResponse);
 
 type ValidatedElement = HTMLElement & { name: string };
 
-type OnFormSubmit<ErrorFields extends Object, Payload> = (
-  el: Payload,
-) => MaybePromise<void | Partial<ErrorFields>>;
+type OnFormSubmit<ErrorFields extends Object, Payload> = (el: Payload) => OnFormSubmitResult;
 
 declare module 'solid-js' {
   namespace JSX {
     interface Directives {
-      formSubmit: (callback: HTMLFormElement) => any;
+      formSubmit: (callback: HTMLFormElement) => OnFormSubmitResult;
       validate: boolean | Validator<any>[];
     }
   }
@@ -73,7 +73,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
       fields[name] = config = { element: ref, validators };
       ref.onblur = () => {
         setIsSubmitted(false);
-        return checkValid(config, setErrors, errorClass);
+        return checkValid(config, setErrors, errorClass)();
       };
       ref.oninput = () => {
         setIsSubmitted(false);
@@ -139,6 +139,18 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
   }
 
   function clearErrors() {
+    // The store is only half of the error state. Without this, a reset or a
+    // successful submit leaves every field still marked aria-invalid, still
+    // carrying errorClass, and still failing checkValidity from its stale
+    // custom validity message.
+    for (const key in fields) {
+      const element = fields[key]?.element;
+      if (!element) continue;
+      element.setAttribute('aria-invalid', 'false');
+      errorClass && element.classList.toggle(errorClass, false);
+      element.setCustomValidity?.('');
+    }
+
     setErrors(
       errors =>
         Object.fromEntries(

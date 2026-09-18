@@ -1,0 +1,17 @@
+packages:
+  - .
+  - docs/versions/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  '@parcel/watcher': true
+
+minimumReleaseAgeExclude:
+  - '@sparkstone/css@2.0.0'
+
+overrides:
+  '@kobalte/core>solid-js': 2.0.0-rc.8
+  '@kobalte/core>@solidjs/web': 2.0.0-rc.8
+  '@kobalte/utils>solid-js': 2.0.0-rc.8
+  '@kobalte/utils>@solidjs/web': 2.0.0-rc.8

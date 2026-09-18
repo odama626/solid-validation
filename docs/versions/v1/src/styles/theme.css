@@ -1,0 +1,69 @@
+/*
+ * @sparkstone/css exposes lightness-contrast percentages, not colours. A colour
+ * is built from the base hue with oklch relative syntax:
+ *     oklch(from var(--color) var(--surface-lc-2) h)
+ * Using the -lc variables directly yields an invalid value, which is why this
+ * bridge previously did nothing.
+ */
+:root {
+  --sl-font: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --sl-color-accent: oklch(from var(--color) var(--primary-surface-lc) h);
+  --sl-color-accent-low: oklch(from var(--color) var(--surface-lc-2) h);
+  --sl-color-accent-high: oklch(from var(--color) var(--text-lc-1) h);
+}
+
+.sl-markdown-content :is(h1, h2, h3) {
+  letter-spacing: -0.018em;
+}
+
+.sl-markdown-content :is(p, li) {
+  max-width: 68ch;
+}
+
+/* Section rules give the long reference pages some rhythm. */
+.sl-markdown-content h2 {
+  margin-top: 2.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid oklch(from var(--color) var(--surface-lc-3) h);
+}
+
+/*
+ * Starlight's search is a bare <dialog>, and the classless build styles bare
+ * dialogs as full-viewport flex-centred overlays. Starlight does not set those
+ * properties itself, so nothing unlayered competes and the layered rules take
+ * over its modal. These selectors are unlayered, so they win, and hand the
+ * dialog back to Starlight's own layout.
+ */
+site-search dialog {
+  display: revert;
+  position: revert;
+  inset: revert;
+  justify-content: revert;
+  align-items: revert;
+  min-height: revert;
+  backdrop-filter: revert;
+  z-index: revert;
+}
+
+site-search dialog > form {
+  width: revert;
+  max-height: revert;
+}
+
+site-search dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(4px);
+}
+
+/* The Ctrl+K hint in the search button. */
+site-search kbd {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid oklch(from var(--color) var(--surface-lc-4) h);
+  border-radius: 0.25rem;
+  background: oklch(from var(--color) var(--surface-lc-2) h);
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}

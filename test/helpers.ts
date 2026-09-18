@@ -1,0 +1,80 @@
+import { fireEvent, waitFor } from '@solidjs/testing-library';
+import { vi } from 'vitest';
+
+/**
+ * Timing rules for this suite. Read before adding a test.
+ *
+ * There are exactly two places a wait is justified:
+ *
+ * 1. Registration. `validate` defers into a `queueMicrotask`, so a field is not
+ *    in the registry during the tick it rendered in. One turn is always enough
+ *    and always necessary. Use `registered()`.
+ *
+ * 2. Anything that runs a custom validator. `checkValid` awaits every validator
+ *    in turn, so the number of microtasks scales with how far down the array the
+ *    failure sits: one validator takes one turn, three take two. Never count
+ *    them. Use `waitFor`, which polls until the assertion holds.
+ *
+ * Everything else is synchronous under Solid 1 and is asserted with no await at
+ * all, on purpose. Native-constraint failures on blur, error clearing on input,
+ * and clearing on form reset all land in the same tick as the event. Those bare
+ * assertions are the canaries: if a Solid 2 scheduler defers store writes or DOM
+ * updates, they fail immediately and name what changed, instead of being papered
+ * over by a stray await.
+ *
+ * The actions below are deliberately synchronous and return nothing. Awaiting
+ * one would smuggle in a microtask and hide the thing the test is checking.
+ */
+
+/** One microtask turn. The registration deferral, and nothing else. */
+export const microtask = () => new Promise<void>(resolve => queueMicrotask(resolve));
+
+/** Wait for `validate` to have registered the fields rendered so far. */
+export const registered = () => microtask();
+
+export { waitFor };
+
+export function blur(el: HTMLElement) {
+  fireEvent.blur(el);
+}
+
+export function typeInto(el: HTMLInputElement, value: string) {
+  fireEvent.input(el, { target: { value } });
+}
+
+export function submitForm(form: HTMLFormElement) {
+  fireEvent.submit(form);
+}
+
+export function press(el: HTMLElement) {
+  fireEvent.click(el);
+}
+
+export const text = (el: HTMLElement) => el.textContent ?? '';
+
+/** Passes when the value is at least `min` characters. */
+export function minLength(min: number) {
+  return (el: HTMLInputElement) => el.value.length < min && `Must be at least ${min} characters`;
+}
+
+/** Always passes. Pads a validator array to push the failure further down it. */
+export const passes = () => undefined;
+
+/** Resolves after a real delay, so async ordering is actually exercised. */
+export function asyncValidator(message: string | undefined, delayMs = 0) {
+  return vi.fn(async (_el: HTMLElement) => {
+    await new Promise(resolve => setTimeout(resolve, delayMs));
+    return message;
+  });
+}
+
+/** A promise plus the handle to settle it, for pinning a callback open mid-submit. */
+export function deferred<T = void>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}

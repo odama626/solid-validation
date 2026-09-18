@@ -1,0 +1,58 @@
+import { Select } from '@kobalte/core/select';
+import { Show, createEffect, createSignal } from 'solid-js';
+import versions from '../../../../versions.json';
+
+type Version = { id: string; label: string; path: string; prerelease?: boolean };
+
+const all = versions.versions as Version[];
+const here = 'v2';
+
+/**
+ * Each version is a standalone site, so switching is a full page navigation.
+ * The list comes from versions.json at the docs root, which every version
+ * reads, so adding a version is a one-file change.
+ */
+export default function VersionSwitcher() {
+  const current = () => all.find(v => v.id === here) ?? all[0];
+  const [mounted, setMounted] = createSignal(false);
+
+  // Kobalte does not hydrate cleanly, so it renders only after mount behind a
+  // matching placeholder. Not guarded by isServer: a reactive node that exists
+  // on one side only desynchronises the hydration key namespace.
+  createEffect(
+    () => undefined,
+    () => {
+      setMounted(true);
+    },
+  );
+
+  return (
+    <Show
+      when={mounted()}
+      fallback={<span class='docs-version-placeholder'>{current().label}</span>}>
+      <Select<Version>
+        options={all}
+        optionValue='id'
+        optionTextValue='label'
+        value={current()}
+        onChange={next => {
+          if (!next || next.id === here) return;
+          window.location.href = next.path;
+        }}
+        itemComponent={props => (
+          <Select.Item item={props.item}>
+            <Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
+          </Select.Item>
+        )}>
+        <Select.Trigger class='secondary' aria-label='Documentation version'>
+          <Select.Value<Version>>{state => state.selectedOption().label}</Select.Value>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Content class='card'>
+            <Select.Listbox />
+          </Select.Content>
+        </Select.Portal>
+      </Select>
+    </Show>
+  );
+}
