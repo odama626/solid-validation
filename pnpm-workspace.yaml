@@ -7,9 +7,6 @@ allowBuilds:
   sharp: true
   '@parcel/watcher': true
 
-minimumReleaseAgeExclude:
-  - '@sparkstone/css@2.0.0'
-
 overrides:
   '@kobalte/core>solid-js': 2.0.0-rc.8
   '@kobalte/core>@solidjs/web': 2.0.0-rc.8
