@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter @sparkstone/solid-validation build && pnpm build:v1 && pnpm build:v2 && pnpm build:root",
-    "build:v1": "pnpm --filter solid-validation-docs-v1 build && node ./scripts/collect.mjs v1",
-    "build:v2": "pnpm --filter solid-validation-docs-v2 build && node ./scripts/collect.mjs v2",
+    "build": "node ./scripts/build.mjs",
+    "build:all": "node ./scripts/build.mjs --all",
+    "build:version": "node ./scripts/build.mjs",
     "build:root": "node ./root/build.mjs",
+    "dev": "node ./scripts/dev.mjs",
     "dev:v1": "pnpm --filter solid-validation-docs-v1 dev",
     "dev:v2": "pnpm --filter solid-validation-docs-v2 dev"
   }
