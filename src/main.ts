@@ -125,7 +125,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
         }
       }
     }
-    if (errored) return false;
+    if (errored) return true;
     setIsSubmitting(true);
     let callbackResult = await callback(ref);
     if (callbackResult instanceof Object) {
