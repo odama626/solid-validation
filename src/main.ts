@@ -79,7 +79,6 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
         };
         ref.oninput = () => {
           setIsSubmitted(false);
-          if (!errors[name]) return;
           setErrors(draft => {
             draft[name] = undefined;
           });
@@ -101,7 +100,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
       field.element.focus();
       field.element.scrollIntoView({ behavior: 'smooth' });
     }
-    return !errors[fieldName];
+    return !error;
   }
 
   function getFieldValue(fieldName: keyof ErrorFields) {
@@ -153,12 +152,11 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
       element.setCustomValidity?.('');
     }
 
-    setErrors(
-      errors =>
-        Object.fromEntries(
-          Object.entries(errors).map(([key, value]) => [key, undefined]),
-        ) as Partial<ErrorFields>,
-    );
+    setErrors(draft => {
+      for (const field in Object.entries(draft)) {
+        draft[field] = undefined;
+      }
+    });
   }
 
   const formSubmit =
