@@ -154,7 +154,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
 
     setErrors(draft => {
       for (const field in draft) {
-        draft[field] = undefined;
+        delete draft[field];
       }
     });
   }
