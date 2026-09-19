@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-BmGf52qt.js";import{t as r}from"./components-BNUblAyO.js";import{t as i}from"./SubmitDemo-P88BpRrn.js";var a=void 0;function o(t){let a={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`solid-validation - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";import{t as i}from"./SubmitDemo-P88BpRrn.js";var a=void 0;function o(t){let a={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`solid-validation - solid-validation`}),`
 `,e(a.h1,{children:`solid-validation`}),`
 `,e(i,{}),`
 `,e(a.p,{children:`That form is running the real library. Two directives, one store:`}),`

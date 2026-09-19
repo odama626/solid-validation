@@ -310,16 +310,35 @@
  * inline; this swaps to the dark set when the framework is in dark mode, so the
  * code blocks follow the rest of the page instead of being fixed to one theme.
  */
+/*
+ * Shiki emits both themes as CSS variables on every token. The framework picks
+ * its scheme from prefers-color-scheme and lets [data-color-scheme] override
+ * it, so code blocks follow the same two rules rather than the attribute alone.
+ */
 .shiki,
 .shiki span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-scheme='light']) .shiki,
+  :root:not([data-color-scheme='light']) .shiki span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
+}
+
 [data-color-scheme='dark'] .shiki,
 [data-color-scheme='dark'] .shiki span {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
+}
+
+[data-color-scheme='light'] .shiki,
+[data-color-scheme='light'] .shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
 }
 
 .shiki {

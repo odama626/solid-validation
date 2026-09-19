@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-BmGf52qt.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Outside a form - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Outside a form - solid-validation`}),`
 `,e(i.h1,{children:`Outside a form`}),`
 `,e(i.p,{children:`Not every required choice is an input. A plan picker, a map marker, a signature pad and a file dropzone all have a valid and an invalid state, and none of them are form controls.`}),`
 `,e(i.p,{get children(){return[e(i.code,{children:`use:validate`}),` works on any element. Give it a `,e(i.code,{children:`data-name`}),` so its errors have a key, and call `,e(i.code,{children:`submit()`}),` yourself instead of relying on a form:`]}}),`

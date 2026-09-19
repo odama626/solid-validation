@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-BmGf52qt.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Server-side errors - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Server-side errors - solid-validation`}),`
 `,e(i.h1,{children:`Server-side errors`}),`
 `,e(i.p,{children:`Client validation only covers what the browser can see. Uniqueness, authorization and rate limits come back from the server after everything local has already passed.`}),`
 `,e(i.p,{get children(){return[`Return an object from your submit callback and its keys are merged into `,e(i.code,{children:`errors`}),`:`]}}),`

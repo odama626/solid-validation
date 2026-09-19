@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-BmGf52qt.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Child components - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Child components - solid-validation`}),`
 `,e(i.h1,{children:`Child components`}),`
 `,e(i.p,{get children(){return[`Directives are compile-time syntax, not values. `,e(i.code,{children:`use:validate`}),` cannot be forwarded as a prop, spread onto a child, or stored in a variable and applied later. Once a field moves into its own component, the directive stops being an option.`]}}),`
 `,e(i.p,{get children(){return[e(i.code,{children:`validateRef`}),` is the same registration behind a plain ref function:`]}}),`
