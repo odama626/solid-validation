@@ -125,10 +125,11 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
         }
       }
     }
-    if (errored) return;
+    if (errored) return false;
     setIsSubmitting(true);
     let callbackResult = await callback(ref);
     if (callbackResult instanceof Object) {
+      errored = true;
       for (const name in callbackResult) {
         if (!(name in fields)) continue;
         fields[name]!.element.setAttribute('aria-invalid', 'true');
@@ -141,6 +142,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
       setIsSubmitted(true);
     }
     setIsSubmitting(false);
+    return errored;
   }
 
   function clearErrors() {
