@@ -1,9 +1,47 @@
 import { Title } from '@solidjs/meta';
+import { createHighlighterCoreSync } from 'shiki/core';
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
+import css from 'shiki/langs/css.mjs';
+import json from 'shiki/langs/json.mjs';
+import bash from 'shiki/langs/shellscript.mjs';
+import tsx from 'shiki/langs/tsx.mjs';
+import typescript from 'shiki/langs/typescript.mjs';
+import githubDark from 'shiki/themes/github-dark-default.mjs';
+import githubLight from 'shiki/themes/github-light-default.mjs';
 import MarkdownIt from 'markdown-it';
 import { For, Show } from 'solid-js';
 import Demo from './Demo';
 
-const md = MarkdownIt({ html: true, linkify: true });
+// The sync engine keeps rendering synchronous, which matters because the page
+// is server-rendered and hydrated rather than assembled in an effect. Both
+// themes are emitted, and CSS variables pick one at runtime.
+const highlighter = createHighlighterCoreSync({
+  engine: createJavaScriptRegexEngine(),
+  themes: [githubLight, githubDark],
+  langs: [tsx, typescript, css, json, bash],
+});
+
+const aliases: Record<string, string> = {
+  ts: 'typescript',
+  js: 'typescript',
+  jsx: 'tsx',
+  sh: 'shellscript',
+  diff: 'tsx',
+};
+
+const md = MarkdownIt({
+  html: true,
+  linkify: true,
+  highlight(code, lang) {
+    const language = aliases[lang] ?? lang;
+    if (!language || !highlighter.getLoadedLanguages().includes(language as any)) return '';
+    return highlighter.codeToHtml(code, {
+      lang: language,
+      themes: { light: 'github-light-default', dark: 'github-dark-default' },
+      defaultColor: false,
+    });
+  },
+});
 
 const demoTitles: Record<string, string> = {
   basic: 'A form with native and custom validation',

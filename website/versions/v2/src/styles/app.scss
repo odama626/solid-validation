@@ -302,3 +302,38 @@
     transition: none;
   }
 }
+
+/* ---------- code highlighting ---------- */
+
+/*
+ * Shiki emits both themes as CSS variables on every token. The light values are
+ * inline; this swaps to the dark set when the framework is in dark mode, so the
+ * code blocks follow the rest of the page instead of being fixed to one theme.
+ */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+[data-color-scheme='dark'] .shiki,
+[data-color-scheme='dark'] .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+.shiki {
+  padding: 1rem 1.15rem;
+  border: var(--border-width) solid oklch(from var(--color) var(--surface-lc-3) h);
+  border-radius: var(--border-radius);
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.shiki code {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono, ui-monospace, monospace);
+}

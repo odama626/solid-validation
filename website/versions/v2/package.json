@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "@kobalte/core": "2.0.0-alpha.2",
+    "@shikijs/markdown-it": "^4.4.3",
     "@solidjs/meta": "1.0.0-next.2",
     "@solidjs/router": "2.0.0-next.24",
     "@solidjs/web": "2.0.0-rc.8",
     "@sparkstone/css": "^2.0.0",
+    "@sparkstone/solid-validation": "workspace:^",
     "markdown-it": "^15.0.2",
-    "solid-js": "2.0.0-rc.8",
-    "@sparkstone/solid-validation": "workspace:^"
+    "shiki": "^4.4.3",
+    "solid-js": "2.0.0-rc.8"
   },
   "devDependencies": {
     "@solidjs/prerender": "^0.2.0",

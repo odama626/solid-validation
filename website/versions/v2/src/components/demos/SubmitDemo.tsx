@@ -28,8 +28,8 @@ export default function SubmitDemo() {
     <form ref={formSubmit(onSubmit)}>
       <p>
         <small>
-          Submit with the form button, then with the one that calls <code>submit()</code> from a
-          click handler. Both should behave identically.
+          Submit empty and both fields should refuse. Fill them in and it saves after 400ms.
+          Anything at <code>@example.com</code> comes back rejected by the server.
         </small>
       </p>
 

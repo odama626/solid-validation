@@ -1,8 +1,8 @@
-import{H as e}from"./web-D5piyuW3.js";import{t}from"./MarkdownPage-B5iwZh1f.js";var n=`---
+import{H as e}from"./web-D5piyuW3.js";import{t}from"./MarkdownPage-BE134o7D.js";var n=`---
 title: solid-validation
 ---
 
-:::demo basic:::
+:::demo submit:::
 
 That form is running the real library. Two directives, one store:
 

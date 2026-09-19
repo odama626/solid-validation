@@ -2,7 +2,7 @@
 title: solid-validation
 ---
 
-:::demo basic:::
+:::demo submit:::
 
 That form is running the real library. Two directives, one store:
 
