@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Migrating from v1 - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-Bpzgn6ZA.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Migrating from v1 - solid-validation`}),`
 `,e(i.h1,{children:`Migrating from v1`}),`
 `,e(i.p,{get children(){return[`v2 targets Solid 2. Two things drive every change below: Solid 2 removed `,e(i.code,{children:`use:`}),`
 directives, and it batches store writes.`]}}),`

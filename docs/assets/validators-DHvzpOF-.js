@@ -1,4 +1,4 @@
-import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-CaaYd2GF.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={a:`a`,code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Writing validators - solid-validation`}),`
+import{H as e,et as t}from"./web-CX4CTzKu.js";import{l as n}from"./virtual_solid-ssr-entry-client-Bpzgn6ZA.js";import{t as r}from"./components-BNUblAyO.js";var i=void 0;function a(t){let i={a:`a`,code:`code`,h1:`h1`,h2:`h2`,p:`p`,pre:`pre`,span:`span`,...r(),...t.components};return[e(n,{children:`Writing validators - solid-validation`}),`
 `,e(i.h1,{children:`Writing validators`}),`
 `,e(i.p,{children:`A validator is a function that takes the element and returns a message when something is wrong:`}),`
 `,e(i.pre,{class:`shiki shiki-themes github-light-default github-dark-default`,style:{"--shiki-light":`#1f2328`,"--shiki-dark":`#e6edf3`,"--shiki-light-bg":`#ffffff`,"--shiki-dark-bg":`#0d1117`},tabindex:`0`,get children(){return e(i.code,{get children(){return[e(i.span,{class:`line`}),`

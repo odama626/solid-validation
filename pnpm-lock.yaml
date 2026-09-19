@@ -105,8 +105,8 @@ importers:
         specifier: 2.0.0-rc.9
         version: 2.0.0-rc.9(solid-js@2.0.0-rc.9)
       '@sparkstone/css':
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: file:/mnt/user-data/uploads/sparkstone-css-2_0_0.tgz
+        version: file:../../../mnt/user-data/uploads/sparkstone-css-2_0_0.tgz
       '@sparkstone/solid-validation':
         specifier: workspace:^
         version: link:../../..
@@ -1882,6 +1882,10 @@ packages:
 
   '@sparkstone/css@2.0.0':
     resolution: {integrity: sha512-PdzK83KTAtlHRdJjWWMzi8fg0E40I7Bkdd7DX9IqgCrbjnknVWe3YAfvYZlbF/b/RfaC9I6LHOdPuRfPMbRvIg==}
+
+  '@sparkstone/css@file:../../../mnt/user-data/uploads/sparkstone-css-2_0_0.tgz':
+    resolution: {integrity: sha512-G8eZzWkf3PwSWXeMISHDiChvdkfrY5hOlrWzaLAEpBZtsw849JTsIGCjj5ja+8hEez0H27HgelnrirSqiemrdg==, tarball: file:../../../mnt/user-data/uploads/sparkstone-css-2_0_0.tgz}
+    version: 2.0.0
 
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
@@ -5577,6 +5581,8 @@ snapshots:
       solid-js: 2.0.0-rc.9
 
   '@sparkstone/css@2.0.0': {}
+
+  '@sparkstone/css@file:../../../mnt/user-data/uploads/sparkstone-css-2_0_0.tgz': {}
 
   '@swc/helpers@0.5.23':
     dependencies:

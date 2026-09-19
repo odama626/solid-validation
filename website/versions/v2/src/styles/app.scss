@@ -1,6 +1,9 @@
 // The classless build styles bare semantic elements, which is what the docs
 // markup and the demos use. The default export is the class-based build.
 @use '@sparkstone/css/src/classless.scss';
+// Kobalte's parts are styled by their own layer, keyed on its state
+// attributes, so the version switcher needs no hand-written rules.
+@use '@sparkstone/css/src/classless/kobalte.scss';
 
 /*
  * Colour comes from @sparkstone/css via oklch relative syntax: the -lc
@@ -246,15 +249,6 @@
   min-height: 1.25rem;
   font-size: 0.875rem;
   color: var(--error-color);
-}
-
-.docs-version-placeholder {
-  display: inline-block;
-  padding: 0.4rem 0.7rem;
-  border: var(--border-width) solid oklch(from var(--color) var(--surface-lc-3) h);
-  border-radius: var(--border-radius);
-  font-size: 0.875rem;
-  color: oklch(from var(--color) var(--text-lc-3) h);
 }
 
 /* ---------- responsive ---------- */
