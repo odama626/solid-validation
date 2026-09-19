@@ -80,7 +80,7 @@ export function useForm<ErrorFields extends Object>({ errorClass = '' } = {}) {
         ref.oninput = () => {
           setIsSubmitted(false);
           setErrors(draft => {
-            draft[name] = undefined;
+            delete draft[name];
           });
           ref.setAttribute('aria-invalid', 'false');
           errorClass && ref.classList.toggle(errorClass, false);
