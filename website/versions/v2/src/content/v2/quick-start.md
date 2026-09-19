@@ -17,6 +17,7 @@ Solid 1.9 or newer is the only peer dependency.
 Everything below runs as written. Copy the whole file.
 
 ```tsx
+import { useForm, type Validator } from '@sparkstone/solid-validation';
 
 const minLength =
   (min: number): Validator<HTMLInputElement> =>
@@ -31,13 +32,13 @@ export default function SignupForm() {
   }
 
   return (
-    <form use:formSubmit={onSubmit}>
+    <form ref={formSubmit(onSubmit)}>
       <label for='email'>Email</label>
-      <input id='email' type='email' name='email' required use:validate />
+      <input id='email' type='email' name='email' required ref={validate()} />
       <span>{errors.email}</span>
 
       <label for='handle'>Handle</label>
-      <input id='handle' name='handle' required use:validate={[minLength(3)]} />
+      <input id='handle' name='handle' required ref={validate(() => [minLength(3)])} />
       <span>{errors.handle}</span>
 
       <button type='submit' disabled={isSubmitting()}>
@@ -51,7 +52,7 @@ export default function SignupForm() {
 
 That is the whole API for a normal form. Here it is running:
 
-:::demo basic:::
+:::demo submit:::
 
 ## What each piece does
 
@@ -93,3 +94,7 @@ const { validate } = useForm({ errorClass: 'is-invalid' });
 ## Next
 
 Server errors, async checks, and fields outside a form are all in the guides. If `use:validate` reports a type error or seems to do nothing, see [Troubleshooting](/v1/troubleshooting).
+
+Calling `submit()` yourself, without a form element:
+
+:::demo imperative-submit:::

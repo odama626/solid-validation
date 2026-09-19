@@ -1,16 +1,29 @@
+import { lazy } from 'solid-js';
+
 /**
- * v2 documents the 2.x library, which does not exist yet. Once it does, demos
- * become ordinary imports rendered inline: this site and the library both run
- * Solid 2, so there is no runtime to isolate and no iframe needed.
+ * v2 documents the 2.x library, and this site runs Solid 2 as well, so demos
+ * are ordinary components rendered inline. No iframe, no second runtime.
  */
+const demos: Record<string, () => Promise<{ default: () => any }>> = {
+  submit: () => import('./demos/SubmitDemo'),
+  'imperative-submit': () => import('./demos/ImperativeSubmitDemo'),
+};
+
 export default function Demo(props: { name: string; title: string }) {
+  const loader = demos[props.name];
+  if (!loader) {
+    return (
+      <aside class='docs-demo-pending' role='note'>
+        <strong>{props.title}</strong>
+        <p>Demo not written yet.</p>
+      </aside>
+    );
+  }
+
+  const Loaded = lazy(loader);
   return (
-    <aside class='docs-demo-pending' role='note'>
-      <strong>{props.title}</strong>
-      <p>
-        Live demo pending the 2.x library release. See the same example running in the{' '}
-        <a href={`${import.meta.env.BASE_URL}v1/`}>v1 documentation</a>.
-      </p>
-    </aside>
+    <section class='docs-demo' aria-label={props.title}>
+      <Loaded />
+    </section>
   );
 }
