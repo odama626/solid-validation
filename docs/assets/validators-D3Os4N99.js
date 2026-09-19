@@ -1,4 +1,4 @@
-import{H as e}from"./dist-B5qRkI56.js";import{t}from"./MarkdownPage-UBS0bX0L.js";var n=`---
+import{H as e}from"./web-D5piyuW3.js";import{t}from"./MarkdownPage-B5iwZh1f.js";var n=`---
 title: Writing validators
 ---
 

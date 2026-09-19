@@ -1,0 +1,78 @@
+<!DOCTYPE html><html _hk=000 lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!--$--><script>window._$HY||(e=>{let t=e=>e&&e.hasAttribute&&(e.hasAttribute("_hk")?e:t(e.host&&e.host.nodeType?e.host:e.parentNode));["click","input"].forEach((o=>document.addEventListener(o,(o=>{if(!e.events)return;let s=t(o.composedPath&&o.composedPath()[0]||o.target);s&&!e.completed.has(s)&&e.events.push([s,o])}))))})(_$HY={events:[],completed:new WeakSet,r:{},fe(){}});</script><script>(self.$R=self.$R||{})[""]=[];_$HY.r["0010070b00_assets"]=($R[0]={"0010070b000031000":"/solid-validation/assets/migrating-DSc22lk1.js"});_$HY.r["0010070b00_assets"]=($R[1]={"0010070b000031000":"/solid-validation/assets/migrating-DSc22lk1.js"});_$HY.r["0010070b00_fr"]=$R[2]=($R[3]=($R[4]=() => {
+	const resolver = {
+		p: 0,
+		s: 0,
+		f: 0
+	};
+	resolver.p = new Promise((resolve, reject) => {
+		resolver.s = resolve;
+		resolver.f = reject;
+	});
+	return resolver;
+})()).p;($R[5]=(resolver, data) => {
+	resolver.s(data);
+	resolver.p.s = 1;
+	resolver.p.v = data;
+})($R[3],!0);</script><!--xs--><!--/--><title data-dh="title">Migrating from v1 - solid-validation</title><link rel="stylesheet" href="/solid-validation/assets/virtual_solid-ssr-entry-client-B0qum1hI.css"><link rel="modulepreload" href="/solid-validation/assets/web-D5piyuW3.js"><link rel="modulepreload" href="/solid-validation/assets/dist-Bb9UN4y3.js"><link rel="modulepreload" href="/solid-validation/assets/migrating-DSc22lk1.js"><link rel="modulepreload" href="/solid-validation/assets/MarkdownPage-B5iwZh1f.js"><link rel="modulepreload" href="/solid-validation/assets/virtual_solid-ssr-entry-client-Bv11yjTg.js"><script type="module" src="/solid-validation/assets/virtual_solid-ssr-entry-client-Bv11yjTg.js" async></script></head><body><header _hk=00100702 class="docs-bar"><p class="docs-bar__title"><a href="/" class="semantic">solid-validation</a></p><span class="docs-bar__spacer"></span><!--$--><span _hk=001007060 class="docs-version-placeholder">v2 (Solid 2)</span><!--/--><a href="https://github.com/sparkstonepdx/solid-validation" class="secondary">GitHub</a></header><div _hk=00100707 class="docs-shell"><!--$--><nav _hk=00100708 class="docs-nav" aria-label="Documentation"><h2 _hk=0010070900>Start here</h2><ul _hk=0010070901><li _hk=001007090200><a href="/solid-validation/v2">Overview</a></li><li _hk=001007090210><a href="/solid-validation/v2/quick-start">Quick start</a></li><li _hk=001007090220><a href="/solid-validation/v2/migrating" aria-current="page">Migrating from v1</a></li></ul><!--!$--><h2 _hk=0010070910>Guides</h2><ul _hk=0010070911><li _hk=001007091200><a href="/solid-validation/v2/guides/validators">Writing validators</a></li><li _hk=001007091210><a href="/solid-validation/v2/guides/server-errors">Server-side errors</a></li><li _hk=001007091220><a href="/solid-validation/v2/guides/outside-forms">Outside a form</a></li><li _hk=001007091230><a href="/solid-validation/v2/guides/child-components">Child components</a></li><li _hk=001007091240><a href="/solid-validation/v2/guides/pocketbase">PocketBase</a></li></ul><!--!$--><h2 _hk=0010070920>API</h2><ul _hk=0010070921><li _hk=001007092200><a href="/solid-validation/v2/api/use-form">useForm</a></li><li _hk=001007092210><a href="/solid-validation/v2/api/types">Types</a></li></ul><!--!$--><h2 _hk=0010070930>Help</h2><ul _hk=0010070931><li _hk=001007093200><a href="/solid-validation/v2/troubleshooting">Troubleshooting</a></li></ul></nav><!--/--><main class="docs-main"><!--!$--><h1 _hk=0010070b00003100021>Migrating from v1</h1><div _hk=0010070b000031000300><p>v2 targets Solid 2. Two things drive every change below: Solid 2 removed <code>use:</code>
+directives, and it batches store writes.</p>
+<h2>Directives become ref factories</h2>
+<p><code>use:validate</code> and <code>use:formSubmit</code> are gone, because Solid 2 has no directives.
+Each is now a function you call, which returns a ref callback.</p>
+<pre><code class="language-diff">-&lt;form use:formSubmit={onSubmit}&gt;
+-  &lt;input name='email' required use:validate /&gt;
+-  &lt;input name='handle' use:validate={[minLength(3)]} /&gt;
+-&lt;/form&gt;
++&lt;form ref={formSubmit(onSubmit)}&gt;
++  &lt;input name='email' required ref={validate()} /&gt;
++  &lt;input name='handle' ref={validate(() =&gt; [minLength(3)])} /&gt;
++&lt;/form&gt;
+</code></pre>
+<p>Destructuring <code>useForm()</code> is no longer required. The directive compiler needed
+the names in scope; a ref factory is an ordinary value, so <code>form.validate(...)</code>
+works as well.</p>
+<h2>validators take an accessor</h2>
+<p><code>validate</code> takes a function returning the array, not the array itself. The
+directive compiler used to insert that wrapper for you.</p>
+<pre><code class="language-diff">-use:validate={[minLength(3), noSpaces]}
++ref={validate(() =&gt; [minLength(3), noSpaces])}
+</code></pre>
+<p>The wrapper is what makes a conditional rule work, because the array is read
+when the field is checked rather than when it mounts:</p>
+<pre><code class="language-tsx">&lt;input ref={validate(() =&gt; [isRequired, needsMatch() &amp;&amp; mustMatch])} /&gt;
+</code></pre>
+<p><code>formSubmit</code> takes the callback directly. Your callback closes over its own
+signals and reads them when it runs, so there is nothing to defer.</p>
+<h2>validateRef is gone</h2>
+<p>It existed because directives could not cross a component boundary. Ref
+factories can, so <code>validate</code> covers both cases and <code>validateRef</code> is removed.</p>
+<pre><code class="language-diff">-&lt;input ref={props.validateRef(minLength(3), noSpaces)} /&gt;
++&lt;input ref={props.validate(() =&gt; [minLength(3), noSpaces])} /&gt;
+</code></pre>
+<p>Note the arguments become one array inside an accessor.</p>
+<h2>Errors arrive a tick later</h2>
+<p>Solid 2 batches store writes. In v1 a blur on an empty required field put the
+message in <code>errors</code> in the same tick as the event. It now lands on the next
+flush.</p>
+<p>Nothing changes for rendering, since anything reading <code>errors.email</code> in JSX
+updates when the write settles. It matters if you read the store imperatively
+straight after an event:</p>
+<pre><code class="language-ts">field.dispatchEvent(new FocusEvent('blur'));
+errors.email; // still undefined here
+</code></pre>
+<p><code>validateField</code> is unaffected. It awaits its own check and reports the result
+directly rather than reading the store back.</p>
+<p>In tests, assert with <code>waitFor</code> rather than immediately after the action.</p>
+<h2>Cleared fields leave no key</h2>
+<p>Clearing an error now deletes its key instead of setting it to <code>undefined</code>, so
+<code>Object.keys(errors)</code> lists only fields that are currently failing. Code that
+counts errors or iterates the store sees the difference; code that reads
+<code>errors.email</code> does not.</p>
+<h2>Peer dependencies</h2>
+<p><code>@solidjs/web</code> joins <code>solid-js</code> as a peer, since Solid 2 puts the JSX runtime in
+a separate package.</p>
+<pre><code class="language-json">&quot;peerDependencies&quot;: {
+  &quot;solid-js&quot;: &quot;^2.0.0&quot;,
+  &quot;@solidjs/web&quot;: &quot;^2.0.0&quot;
+}
+</code></pre>
+</div></main></div></body></html>
