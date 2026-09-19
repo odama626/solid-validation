@@ -145,6 +145,41 @@ describe('validate', () => {
   });
 });
 
+describe('submit result', () => {
+  function Form(props: { ready: (api: ReturnType<typeof useForm<Fields>>) => void }) {
+    const api = useForm<Fields>();
+    props.ready(api);
+    const { validate } = api;
+    return <input name='username' required ref={validate()} data-testid='username' />;
+  }
+
+  it('reports false when validation blocks the submit', async () => {
+    let api!: ReturnType<typeof useForm<Fields>>;
+    render(() => <Form ready={a => (api = a)} />);
+    await registered();
+
+    expect(await api.submit(() => {})).toBe(false);
+  });
+
+  it('reports true when the callback returns nothing', async () => {
+    let api!: ReturnType<typeof useForm<Fields>>;
+    render(() => <Form ready={a => (api = a)} />);
+    await registered();
+
+    await typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
+    expect(await api.submit(() => {})).toBe(true);
+  });
+
+  it('reports false when the callback returns errors', async () => {
+    let api!: ReturnType<typeof useForm<Fields>>;
+    render(() => <Form ready={a => (api = a)} />);
+    await registered();
+
+    await typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
+    expect(await api.submit(() => ({ username: 'Already taken' }))).toBe(false);
+  });
+});
+
 describe('submit without a form', () => {
   it('validates a non-input element keyed by data-name', async () => {
     const callback = vi.fn();

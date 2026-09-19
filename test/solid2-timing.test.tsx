@@ -217,7 +217,7 @@ describe('ownership and disposal', () => {
     unmount();
     pending.resolve();
 
-    await expect(running).resolves.toBeUndefined();
+    await expect(running).resolves.toBe(true);
   });
 });
 
@@ -383,6 +383,6 @@ describe('submission signals', () => {
     first.resolve();
     second.resolve();
 
-    await expect(Promise.all([a, b])).resolves.toEqual([undefined, undefined]);
+    await expect(Promise.all([a, b])).resolves.toEqual([true, true]);
   });
 });

@@ -97,3 +97,16 @@ a separate package.
   "@solidjs/web": "^2.0.0"
 }
 ```
+
+## submit reports its outcome
+
+`submit()` returned `void` in v1, so a caller could not tell whether the
+callback ran. It now resolves to a boolean: `true` when the submission went
+through, `false` when validation refused or the callback returned errors.
+
+```diff
+-await submit(save);
++if (await submit(save)) navigate('/done');
+```
+
+`formSubmit` is unaffected, since the form element has nowhere to report to.

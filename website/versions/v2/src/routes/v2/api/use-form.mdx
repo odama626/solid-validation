@@ -64,7 +64,7 @@ On attach it sets `novalidate` on the form. On submit it calls `preventDefault()
 submit<Payload>(
   callback: (payload: Payload) => MaybePromise<void | Partial<ErrorFields>>,
   payload?: Payload,
-): Promise<void>
+): Promise<boolean>
 ```
 
 Runs validation and, if everything passes, the callback. Use it when there is no form element.
@@ -74,6 +74,17 @@ Runs validation and, if everything passes, the callback. Use it when there is no
 3. Failing fields that have been removed from the document are dropped from the registry rather than blocking.
 4. `isSubmitting` becomes `true`, the callback runs, `isSubmitting` becomes `false`.
 5. A returned object is merged into `errors`. Anything else clears all errors and sets `isSubmitted`.
+
+Resolves to `true` when the submission went through, and `false` when it did
+not, whether that was local validation refusing or the callback returning
+errors. A refused submit is an ordinary outcome, not an exception, so nothing
+rejects.
+
+```ts
+if (await submit(save)) {
+  navigate('/done');
+}
+```
 
 An exception thrown by the callback propagates and leaves `isSubmitting` at `true`. Catch inside the callback.
 

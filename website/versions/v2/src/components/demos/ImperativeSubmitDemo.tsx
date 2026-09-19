@@ -57,7 +57,7 @@ export default function ImperativeSubmitDemo() {
               note('callback started');
               await wait(400);
               note('callback finished');
-            }).then(() => note('submit resolved'));
+            }).then(ok => note(ok ? 'submitted' : 'refused: nothing was submitted'));
           }}>
           {isSubmitting() ? 'Continuing' : 'Continue'}
         </button>
