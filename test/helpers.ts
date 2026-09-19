@@ -35,20 +35,31 @@ export const registered = () => microtask();
 
 export { waitFor };
 
-export function blur(el: HTMLElement) {
+/**
+ * Solid 2 batches store writes, so no assertion can follow an action in the
+ * same tick. Each action dispatches its event and then lets the scheduler
+ * drain, which is why they are awaited at every call site.
+ */
+const settle = () => new Promise<void>(resolve => setTimeout(resolve, 0));
+
+export async function blur(el: HTMLElement) {
   fireEvent.blur(el);
+  await settle();
 }
 
-export function typeInto(el: HTMLInputElement, value: string) {
+export async function typeInto(el: HTMLInputElement, value: string) {
   fireEvent.input(el, { target: { value } });
+  await settle();
 }
 
-export function submitForm(form: HTMLFormElement) {
+export async function submitForm(form: HTMLFormElement) {
   fireEvent.submit(form);
+  await settle();
 }
 
-export function press(el: HTMLElement) {
+export async function press(el: HTMLElement) {
   fireEvent.click(el);
+  await settle();
 }
 
 export const text = (el: HTMLElement) => el.textContent ?? '';

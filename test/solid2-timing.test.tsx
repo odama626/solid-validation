@@ -40,7 +40,7 @@ describe('registration deferral', () => {
     // One turn is enough: the field is live and a native failure lands
     // synchronously from here.
     expect(api.getFieldValue('a')).toBe('');
-    blur(screen.getByTestId('a'));
+    await blur(screen.getByTestId('a'));
     expect(screen.getByTestId('a')).toHaveAttribute('aria-invalid', 'true');
   });
 
@@ -63,7 +63,7 @@ describe('registration deferral', () => {
     setVisible(true);
     await registered();
 
-    blur(screen.getByTestId('late'));
+    await blur(screen.getByTestId('late'));
     expect(screen.getByTestId('error')).not.toBeEmptyDOMElement();
   });
 
@@ -91,7 +91,7 @@ describe('registration deferral', () => {
     const second = screen.getByTestId('toggle');
     expect(second).not.toBe(first);
 
-    blur(second);
+    await blur(second);
     expect(second).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByTestId('error')).not.toBeEmptyDOMElement();
   });
@@ -112,7 +112,7 @@ describe('registration deferral', () => {
     });
     await registered();
 
-    press(screen.getByTestId('go'));
+    await press(screen.getByTestId('go'));
 
     // Both write to the same store key, but only the survivor of the registry
     // is checked on submit, and it is the one that gets focused.
@@ -143,7 +143,7 @@ describe('validator depth', () => {
       });
       await registered();
 
-      blur(screen.getByTestId('f'));
+      await blur(screen.getByTestId('f'));
       await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('Failed'));
     });
   }
@@ -245,10 +245,10 @@ describe('async ordering', () => {
     await registered();
 
     const field = screen.getByTestId('f') as HTMLInputElement;
-    typeInto(field, 'abc');
-    blur(field);
+    await typeInto(field, 'abc');
+    await blur(field);
 
-    typeInto(field, 'long enough now');
+    await typeInto(field, 'long enough now');
     expect(screen.getByTestId('error')).toBeEmptyDOMElement();
 
     await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('Too short'));
@@ -275,8 +275,8 @@ describe('async ordering', () => {
     await registered();
 
     const field = screen.getByTestId('f');
-    blur(field);
-    blur(field);
+    await blur(field);
+    await blur(field);
 
     // The second check finishes first, then the first overwrites it. Whichever
     // way a new scheduler orders these, the store must not be left empty.
@@ -328,7 +328,7 @@ describe('submission signals', () => {
     });
     await registered();
 
-    submitForm(screen.getByTestId('form') as HTMLFormElement);
+    await submitForm(screen.getByTestId('form') as HTMLFormElement);
     await waitFor(() => expect(seen).toContainEqual([true, false]));
 
     pending.resolve();
@@ -356,7 +356,7 @@ describe('submission signals', () => {
     });
     await registered();
 
-    submitForm(screen.getByTestId('form') as HTMLFormElement);
+    await submitForm(screen.getByTestId('form') as HTMLFormElement);
     await waitFor(() => expect(screen.getByTestId('a')).toHaveAttribute('aria-invalid', 'true'));
 
     expect(seen).toEqual([false]);

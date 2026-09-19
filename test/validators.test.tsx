@@ -20,7 +20,7 @@ describe('custom validators', () => {
     render(() => <Field validators={[() => 'Nope']} />);
     await registered();
 
-    blur(screen.getByTestId('field'));
+    await blur(screen.getByTestId('field'));
     await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('Nope'));
   });
 
@@ -29,7 +29,7 @@ describe('custom validators', () => {
     render(() => <Field validators={[slow]} />);
     await registered();
 
-    blur(screen.getByTestId('field'));
+    await blur(screen.getByTestId('field'));
     await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('Taken'));
     expect(slow).toHaveBeenCalledTimes(1);
   });
@@ -41,7 +41,7 @@ describe('custom validators', () => {
     render(() => <Field validators={[first, second]} />);
     await registered();
 
-    blur(screen.getByTestId('field'));
+    await blur(screen.getByTestId('field'));
     await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('First'));
     expect(second).not.toHaveBeenCalled();
   });
@@ -54,7 +54,7 @@ describe('custom validators', () => {
     render(() => <Field validators={[enabled && conditional, real]} />);
     await registered();
 
-    blur(screen.getByTestId('field'));
+    await blur(screen.getByTestId('field'));
     await waitFor(() => expect(real).toHaveBeenCalledTimes(1));
     expect(conditional).not.toHaveBeenCalled();
     expect(screen.getByTestId('error')).toBeEmptyDOMElement();
@@ -66,8 +66,8 @@ describe('custom validators', () => {
     await registered();
 
     const field = screen.getByTestId('field') as HTMLInputElement;
-    typeInto(field, 'hello');
-    blur(field);
+    await typeInto(field, 'hello');
+    await blur(field);
 
     await waitFor(() => expect(spy).toHaveBeenCalledWith(field));
   });
@@ -77,7 +77,7 @@ describe('custom validators', () => {
     await registered();
 
     const field = screen.getByTestId('field') as HTMLInputElement;
-    blur(field);
+    await blur(field);
 
     await waitFor(() => expect(field.validationMessage).toBe('Bad value'));
     expect(field.checkValidity()).toBe(false);
@@ -89,12 +89,12 @@ describe('custom validators', () => {
     await registered();
 
     const field = screen.getByTestId('field') as HTMLInputElement;
-    blur(field);
+    await blur(field);
     await waitFor(() => expect(field.validationMessage).toBe('Bad value'));
 
     fail = false;
-    typeInto(field, 'better');
-    blur(field);
+    await typeInto(field, 'better');
+    await blur(field);
 
     await waitFor(() => expect(field.validationMessage).toBe(''));
     expect(screen.getByTestId('error')).toBeEmptyDOMElement();
@@ -125,7 +125,7 @@ describe('native constraints', () => {
     render(() => <RequiredField validators={[custom]} />);
     await registered();
 
-    blur(screen.getByTestId('field'));
+    await blur(screen.getByTestId('field'));
 
     expect(custom).not.toHaveBeenCalled();
     expect(screen.getByTestId('error')).not.toBeEmptyDOMElement();
@@ -137,8 +137,8 @@ describe('native constraints', () => {
     await registered();
 
     const field = screen.getByTestId('field') as HTMLInputElement;
-    typeInto(field, 'ada@example.com');
-    blur(field);
+    await typeInto(field, 'ada@example.com');
+    await blur(field);
 
     await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('Custom message'));
     expect(custom).toHaveBeenCalledTimes(1);

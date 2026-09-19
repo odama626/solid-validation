@@ -37,7 +37,7 @@ describe('validateField', () => {
     render(() => <Form />);
     await registered();
 
-    typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
+    await typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
     expect(await api.validateField('username')).toBe(true);
   });
 
@@ -64,7 +64,7 @@ describe('getFieldValue', () => {
     render(() => <Form />);
     await registered();
 
-    typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
+    await typeInto(screen.getByTestId('username') as HTMLInputElement, 'ada');
     expect(api.getFieldValue('username')).toBe('ada');
   });
 
@@ -112,8 +112,8 @@ describe('validate', () => {
     render(() => <Parent />);
     await registered();
 
-    typeInto(screen.getByTestId('email') as HTMLInputElement, 'a@b.co');
-    press(screen.getByTestId('go'));
+    await typeInto(screen.getByTestId('email') as HTMLInputElement, 'a@b.co');
+    await press(screen.getByTestId('go'));
 
     await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
     expect(screen.getByTestId('error')).toBeEmptyDOMElement();
@@ -136,8 +136,8 @@ describe('validate', () => {
     render(() => <Parent />);
     await registered();
 
-    typeInto(screen.getByTestId('email') as HTMLInputElement, 'abc');
-    press(screen.getByTestId('go'));
+    await typeInto(screen.getByTestId('email') as HTMLInputElement, 'abc');
+    await press(screen.getByTestId('go'));
 
     await waitFor(() =>
       expect(screen.getByTestId('error')).toHaveTextContent('Must be at least 6 characters'),
@@ -165,7 +165,7 @@ describe('submit without a form', () => {
     render(() => <Widget />);
     await registered();
 
-    press(screen.getByTestId('go'));
+    await press(screen.getByTestId('go'));
 
     await waitFor(() =>
       expect(screen.getByTestId('error')).toHaveTextContent('Pick at least one'),
@@ -188,7 +188,7 @@ describe('submit without a form', () => {
     render(() => <Widget />);
     await registered();
 
-    press(screen.getByTestId('go'));
+    await press(screen.getByTestId('go'));
 
     await waitFor(() => expect(callback).toHaveBeenCalledWith({ id: 7 }));
   });
@@ -215,7 +215,7 @@ describe('submit without a form', () => {
     await registered();
 
     setVisible(false);
-    press(screen.getByTestId('go'));
+    await press(screen.getByTestId('go'));
 
     await waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
   });
